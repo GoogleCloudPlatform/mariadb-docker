@@ -1,0 +1,142 @@
+steps:
+
+# Build images
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - 'build'
+      - '--tag=gcr.io/$PROJECT_ID/mariadb10:10.1-debian9'
+      - '10/10.1'
+    waitFor: ['-']
+    id: 'image-gcr.io/$PROJECT_ID/mariadb10:10.1-debian9'
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - 'build'
+      - '--tag=gcr.io/$PROJECT_ID/mariadb10:10.2-debian9'
+      - '10/10.2'
+    waitFor: ['-']
+    id: 'image-gcr.io/$PROJECT_ID/mariadb10:10.2-debian9'
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - 'build'
+      - '--tag=gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+      - '10/10.3'
+    waitFor: ['-']
+    id: 'image-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+
+# Run functional tests
+  - name: gcr.io/$PROJECT_ID/functional_test
+    args:
+      - '--verbose'
+      - '--vars'
+      - 'IMAGE=gcr.io/$PROJECT_ID/mariadb10:10.1-debian9'
+      - '--vars'
+      - 'UNIQUE=0-0'
+      - '--test_spec'
+      - '/workspace/tests/functional_tests/create_db_test.yaml'
+    waitFor: ['image-gcr.io/$PROJECT_ID/mariadb10:10.1-debian9']
+    id: 'test-gcr.io/$PROJECT_ID/mariadb10:10.1-debian9-0'
+  - name: gcr.io/$PROJECT_ID/functional_test
+    args:
+      - '--verbose'
+      - '--vars'
+      - 'IMAGE=gcr.io/$PROJECT_ID/mariadb10:10.1-debian9'
+      - '--vars'
+      - 'UNIQUE=0-1'
+      - '--test_spec'
+      - '/workspace/tests/functional_tests/remote_host_test.yaml'
+    waitFor: ['image-gcr.io/$PROJECT_ID/mariadb10:10.1-debian9']
+    id: 'test-gcr.io/$PROJECT_ID/mariadb10:10.1-debian9-1'
+  - name: gcr.io/$PROJECT_ID/functional_test
+    args:
+      - '--verbose'
+      - '--vars'
+      - 'IMAGE=gcr.io/$PROJECT_ID/mariadb10:10.2-debian9'
+      - '--vars'
+      - 'UNIQUE=1-0'
+      - '--test_spec'
+      - '/workspace/tests/functional_tests/create_db_test.yaml'
+    waitFor: ['image-gcr.io/$PROJECT_ID/mariadb10:10.2-debian9']
+    id: 'test-gcr.io/$PROJECT_ID/mariadb10:10.2-debian9-0'
+  - name: gcr.io/$PROJECT_ID/functional_test
+    args:
+      - '--verbose'
+      - '--vars'
+      - 'IMAGE=gcr.io/$PROJECT_ID/mariadb10:10.2-debian9'
+      - '--vars'
+      - 'UNIQUE=1-1'
+      - '--test_spec'
+      - '/workspace/tests/functional_tests/remote_host_test.yaml'
+    waitFor: ['image-gcr.io/$PROJECT_ID/mariadb10:10.2-debian9']
+    id: 'test-gcr.io/$PROJECT_ID/mariadb10:10.2-debian9-1'
+  - name: gcr.io/$PROJECT_ID/functional_test
+    args:
+      - '--verbose'
+      - '--vars'
+      - 'IMAGE=gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+      - '--vars'
+      - 'UNIQUE=2-0'
+      - '--test_spec'
+      - '/workspace/tests/functional_tests/create_db_test.yaml'
+    waitFor: ['image-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9']
+    id: 'test-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9-0'
+  - name: gcr.io/$PROJECT_ID/functional_test
+    args:
+      - '--verbose'
+      - '--vars'
+      - 'IMAGE=gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+      - '--vars'
+      - 'UNIQUE=2-1'
+      - '--test_spec'
+      - '/workspace/tests/functional_tests/remote_host_test.yaml'
+    waitFor: ['image-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9']
+    id: 'test-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9-1'
+
+# Add alias tags
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - 'tag'
+      - 'gcr.io/$PROJECT_ID/mariadb10:10.1-debian9'
+      - 'gcr.io/$PROJECT_ID/mariadb10:10.1'
+    waitFor:
+      - 'image-gcr.io/$PROJECT_ID/mariadb10:10.1-debian9'
+      - 'test-gcr.io/$PROJECT_ID/mariadb10:10.1-debian9-0'
+      - 'test-gcr.io/$PROJECT_ID/mariadb10:10.1-debian9-1'
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - 'tag'
+      - 'gcr.io/$PROJECT_ID/mariadb10:10.2-debian9'
+      - 'gcr.io/$PROJECT_ID/mariadb10:10.2'
+    waitFor:
+      - 'image-gcr.io/$PROJECT_ID/mariadb10:10.2-debian9'
+      - 'test-gcr.io/$PROJECT_ID/mariadb10:10.2-debian9-0'
+      - 'test-gcr.io/$PROJECT_ID/mariadb10:10.2-debian9-1'
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - 'tag'
+      - 'gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+      - 'gcr.io/$PROJECT_ID/mariadb10:10.3'
+    waitFor:
+      - 'image-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+      - 'test-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9-0'
+      - 'test-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9-1'
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - 'tag'
+      - 'gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+      - 'gcr.io/$PROJECT_ID/mariadb10:latest'
+    waitFor:
+      - 'image-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+      - 'test-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9-0'
+      - 'test-gcr.io/$PROJECT_ID/mariadb10:10.3-debian9-1'
+
+images:
+  - 'gcr.io/$PROJECT_ID/mariadb10:10.1-debian9'
+  - 'gcr.io/$PROJECT_ID/mariadb10:10.1'
+  - 'gcr.io/$PROJECT_ID/mariadb10:10.2-debian9'
+  - 'gcr.io/$PROJECT_ID/mariadb10:10.2'
+  - 'gcr.io/$PROJECT_ID/mariadb10:10.3-debian9'
+  - 'gcr.io/$PROJECT_ID/mariadb10:10.3'
+  - 'gcr.io/$PROJECT_ID/mariadb10:latest'
+options:
+  machineType: 'N1_HIGHCPU_8'
+
