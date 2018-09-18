@@ -1,0 +1,74 @@
+_templates:
+- &Image launcher.gcr.io/google/elasticsearch
+- &PullCommand gcloud docker -- pull launcher.gcr.io/google/elasticsearch
+- &ServiceArgs
+  name: elasticsearch
+  image: *Image
+  environment:
+    cluster.name:
+      value: Test-Elasticsearch-Cluster
+- &BaseServerRun
+  <<: *ServiceArgs
+  exposedPorts:
+  - port: 9200
+- &BaseClientRun
+  name: elasticsearch
+  image: *Image
+  runType: INTERACTIVE_SHELL
+- &BaseExec
+  execType: INTERACTIVE_SHELL
+
+overview:
+  description: |-
+    This README explains how to launch Elasticsearch on kubernetes or docker. 
+  dockerfileUrl: https://github.com/GoogleCloudPlatform/elasticsearch-docker/tree/master/5/5.7
+  pullCommand: *PullCommand
+
+taskGroups:
+- title: Launching the solution
+  description: Once we build the container we need to deploy it in the cloud to start using it
+  tasks:
+  - title: Installation 
+    runtimes: [DOCKER, KUBERNETES]
+    instructions:
+    - run:
+        <<: *BaseServerRun
+        volumes:
+        - name: data
+          path: /usr/share/elasticsearch/data
+          emptyPersistentVolume:
+            hostPath: /mnt/elasticsearch
+            subPath: data
+    - description: Open a shell to the container.
+      exec:
+        <<: *BaseExec
+        containerName: some-elasticsearch
+        command: bash
+        subcommands:
+        - description: You should be able to use the curl command to interact with elasticsearch
+          command: curl localhost:9200
+        - description: Another good test is to print the nodes
+          command: curl localhost:9200/_cat/nodes
+
+
+portReference:
+  ports:
+  - port: '9200'
+    description: Elasticsearch api port
+  - port: '9300'
+    description: Elasticsearch discovery port
+
+environmentVariableReference:
+  variables:
+  - name: 'cluster.name'
+    description: 'cluster name'
+  - name: 'bootstrap.memory_lock'
+    description: memory lock (true,false)
+  - name: ES_JAVA_OPTS
+    description: java memory contraints
+
+volumeReference:
+  volumes:
+  - path: /usr/share/elasticsearch/data
+    description: Volume location of where the elasticsearch data will be stored. This ensures the data will be intact if there is a reboot or loss of the container
+
