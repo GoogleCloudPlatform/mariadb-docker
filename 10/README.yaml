@@ -1,4 +1,4 @@
-MariaDB# Copyright (C) 2018 Google Inc.
+#MariaDB# Copyright (C) 2018 Google Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -99,13 +99,13 @@ taskGroups:
     instructions:
     - description: >-
         Start the container with both environment variables
-        `MYSQL_RANDOM_ROOT_PASSWORD` and `MYSQL_ONETIME_PASSWORD` set to `yes`.
+        `MARIADB_RANDOM_ROOT_PASSWORD` and `MARIADB_ONETIME_PASSWORD` set to `yes`.
       run:
         <<: *BaseServerRun
         environment:
-          MYSQL_RANDOM_ROOT_PASSWORD:
+          MARIADB_RANDOM_ROOT_PASSWORD:
             value: "yes"
-          MYSQL_ONETIME_PASSWORD:
+          MARIADB_ONETIME_PASSWORD:
             value: "yes"
     - description: >-
         You can then obtain the generated password by viewing the container log
@@ -135,24 +135,24 @@ taskGroups:
         Log on using the password for `root` user.
       exec:
         <<: *BaseExec
-        containerName: some-mysql
+        containerName: some-mariadb
         command: mysql -uroot -p
 
   - title: Connect command line client to a remote MariaDB instance
     runtimes: [DOCKER, KUBERNETES]
     instructions:
     - description: >-
-        Assume that we have a MariaDB instance running at `some.mysql.host` and
-        we want to log on as `some-mysql-user` when connecting.
+        Assume that we have a MariaDB instance running at `some.mariadb.host` and
+        we want to log on as `some-mariadb-user` when connecting.
       run:
         <<: *BaseClientRun
         arguments:
         - sh
         - -c
         - >-
-          'exec mysql -hsome.mysql.host -usome-mysql-user -p'
+          'exec mysql -hsome.mariadb.host -usome-mariadb-user -p'
     - description: >-
-        You will have to enter the password for `some-mysql-user` to log on,
+        You will have to enter the password for `some-mariadb-user` to log on,
         even though there might not be a prompt to enter password due to
         limitation of `kubectl run --attach`.
       applicableRuntimes: [KUBERNETES]
@@ -203,7 +203,7 @@ taskGroups:
         using the following command.
       exec:
         <<: *BaseExec
-        containerName: some-mysql
+        containerName: some-mariadb
         command: sh -c 'exec mysqldump --all-databases -uroot -p"$MARIADB_ROOT_PASSWORD"'
         redirectOutputTo: /some/path/all-databases.sql
     - description: >-
@@ -225,28 +225,28 @@ environmentVariableReference:
       <br><br>
       Instead of the explicit password string, a file path can also be used,
       in which case the content of the file is the password.
-  - name: MYSQL_DATABASE
+  - name: MARAIDB_DATABASE
     description: Optionally specifies the name of the database to be created at startup.
-  - name: MYSQL_USER
+  - name: MARAIDB_USER
     description: >-
       Optionally specifies a new user to be created at startup.
-      Must be used in conjunction with `MYSQL_PASSWORD`. Note that this
+      Must be used in conjunction with `MARAIDB_PASSWORD`. Note that this
       user is in addition to the default `root` superuser.
       <br><br>
-      If `MYSQL_DATABASE` is also specified, this user will be granted
+      If `MARAIDB_DATABASE` is also specified, this user will be granted
       superuser permissions (i.e. `GRANT_ALL`) for that database.
-  - name: MYSQL_PASSWORD
-    description: Used in conjunction with `MYSQL_USER` to specify the password.
-  - name: MYSQL_RANDOM_ROOT_PASSWORD
+  - name: MARAIDB_PASSWORD
+    description: Used in conjunction with `MARAIDB_USER` to specify the password.
+  - name: MARIADB_RANDOM_ROOT_PASSWORD
     description: >-
       If set to `yes`, a random initial password for `root` superuser will be
       generated. This password will be printed to stdout as
       `GENERATED ROOT PASSWORD: ...`
-  - name: MYSQL_ONETIME_PASSWORD
+  - name: MARIADB_ONETIME_PASSWORD
     description: >-
       If set to `yes`, the initial password for `root` superuser, be it
       specified via `MARIADB_ROOT_PASSWORD` or randomly generated (see
-      `MYSQL_RANDOM_ROOT_PASSWORD`), must be changed after startup.
+      `MARIADB_RANDOM_ROOT_PASSWORD`), must be changed after startup.
 
 volumeReference:
   volumes:
