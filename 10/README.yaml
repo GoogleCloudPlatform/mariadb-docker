@@ -98,11 +98,11 @@ taskGroups:
     instructions:
     - description: >-
         Start the container with the environment variable
-        `MARIADB_RANDOM_ROOT_PASSWORD` set to `yes`.
+        `MYSQL_RANDOM_ROOT_PASSWORD` set to `yes`.
       run:
         <<: *BaseServerRun
         environment:
-          MARIADB_RANDOM_ROOT_PASSWORD:
+          MYSQL_RANDOM_ROOT_PASSWORD:
             value: "yes"
     - description: >-
         You can then obtain the generated password by viewing the container log
@@ -224,7 +224,7 @@ environmentVariableReference:
       in which case the content of the file is the password.
   - name: MARAIDB_DATABASE
     description: Optionally specifies the name of the database to be created at startup.
-  - name: MARAIDB_USER
+  - name: MYSQL_USER
     description: >-
       Optionally specifies a new user to be created at startup.
       Must be used in conjunction with `MARAIDB_PASSWORD`. Note that this
@@ -233,8 +233,8 @@ environmentVariableReference:
       If `MARAIDB_DATABASE` is also specified, this user will be granted
       superuser permissions (i.e. `GRANT_ALL`) for that database.
   - name: MARAIDB_PASSWORD
-    description: Used in conjunction with `MARAIDB_USER` to specify the password.
-  - name: MARIADB_RANDOM_ROOT_PASSWORD
+    description: Used in conjunction with `MYSQL_USER` to specify the password.
+  - name: MYSQL_RANDOM_ROOT_PASSWORD
     description: >-
       If set to `yes`, a random initial password for `root` superuser will be
       generated. This password will be printed to stdout as
