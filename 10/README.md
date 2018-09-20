@@ -149,7 +149,7 @@ Note that once the database directory is established, `MYSQL_ROOT_PASSWORD` will
 
 A recommended way to start up your MariaDB server is to have the root password generated on creation of the container. You can then log on and change this password.
 
-Start the container with the environment variable `MARIADB_RANDOM_ROOT_PASSWORD` set to `yes`.
+Start the container with the environment variable `MYSQL_RANDOM_ROOT_PASSWORD` set to `yes`.
 
 Copy the following content to `pod.yaml` file, and run `kubectl create -f pod.yaml`.
 
@@ -165,7 +165,7 @@ spec:
     - image: launcher.gcr.io/google/mariadb10
       name: mariadb
       env:
-        - name: "MARIADB_RANDOM_ROOT_PASSWORD"
+        - name: "MYSQL_RANDOM_ROOT_PASSWORD"
           value: "yes"
 ```
 
@@ -419,7 +419,7 @@ Note that once the database directory is established, `MYSQL_ROOT_PASSWORD` will
 
 A recommended way to start up your MariaDB server is to have the root password generated on creation of the container. You can then log on and change this password.
 
-Start the container with the environment variable `MARIADB_RANDOM_ROOT_PASSWORD` set to `yes`.
+Start the container with the environment variable `MYSQL_RANDOM_ROOT_PASSWORD` set to `yes`.
 
 Use the following content for the `docker-compose.yml` file, then run `docker-compose up`.
 
@@ -430,7 +430,7 @@ services:
     container_name: some-mariadb
     image: launcher.gcr.io/google/mariadb10
     environment:
-      "MARIADB_RANDOM_ROOT_PASSWORD": "yes"
+      "MYSQL_RANDOM_ROOT_PASSWORD": "yes"
     ports:
       - '3306:3306'
 ```
@@ -440,7 +440,7 @@ Or you can use `docker run` directly:
 ```shell
 docker run \
   --name some-mariadb \
-  -e "MARIADB_RANDOM_ROOT_PASSWORD=yes" \
+  -e "MYSQL_RANDOM_ROOT_PASSWORD=yes" \
   -p 3306:3306 \
   -d \
   launcher.gcr.io/google/mariadb10
@@ -603,10 +603,10 @@ These are the environment variables understood by the container image.
 | **Variable** | **Description** |
 |:-------------|:----------------|
 | MYSQL_ROOT_PASSWORD | The password for `root` superuser. Required. <br><br> Instead of the explicit password string, a file path can also be used, in which case the content of the file is the password. |
-| MARAIDB_DATABASE | Optionally specifies the name of the database to be created at startup. |
-| MARAIDB_USER | Optionally specifies a new user to be created at startup. Must be used in conjunction with `MARAIDB_PASSWORD`. Note that this user is in addition to the default `root` superuser. <br><br> If `MARAIDB_DATABASE` is also specified, this user will be granted superuser permissions (i.e. `GRANT_ALL`) for that database. |
-| MARAIDB_PASSWORD | Used in conjunction with `MARAIDB_USER` to specify the password. |
-| MARIADB_RANDOM_ROOT_PASSWORD | If set to `yes`, a random initial password for `root` superuser will be generated. This password will be printed to stdout as `GENERATED ROOT PASSWORD: ...` |
+| MYSQL_DATABASE | Optionally specifies the name of the database to be created at startup. |
+| MYSQL_USER | Optionally specifies a new user to be created at startup. Must be used in conjunction with `MYSQL_PASSWORD`. Note that this user is in addition to the default `root` superuser. <br><br> If `MYSQL_DATABASE` is also specified, this user will be granted superuser permissions (i.e. `GRANT_ALL`) for that database. |
+| MYSQL_PASSWORD | Used in conjunction with `MYSQL_USER` to specify the password. |
+| MYSQL_RANDOM_ROOT_PASSWORD | If set to `yes`, a random initial password for `root` superuser will be generated. This password will be printed to stdout as `GENERATED ROOT PASSWORD: ...` |
 
 ## <a name="references-volumes"></a>Volumes
 
