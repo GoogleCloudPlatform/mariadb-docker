@@ -70,7 +70,7 @@ spec:
     - image: launcher.gcr.io/google/mariadb10
       name: mariadb
       env:
-        - name: "MARIADB_ROOT_PASSWORD"
+        - name: "MYSQL_ROOT_PASSWORD"
           value: "example-password"
 ```
 
@@ -108,7 +108,7 @@ spec:
     - image: launcher.gcr.io/google/mariadb10
       name: mariadb
       env:
-        - name: "MARIADB_ROOT_PASSWORD"
+        - name: "MYSQL_ROOT_PASSWORD"
           value: "example-password"
       volumeMounts:
         - name: data
@@ -143,13 +143,13 @@ kubectl expose pod some-mariadb --name some-mariadb-3306 \
   --type LoadBalancer --port 3306 --protocol TCP
 ```
 
-Note that once the database directory is established, `MARIADB_ROOT_PASSWORD` will be ignored when the instance restarts.
+Note that once the database directory is established, `MYSQL_ROOT_PASSWORD` will be ignored when the instance restarts.
 
 ### <a name="securely-set-up-the-server-kubernetes"></a>Securely set up the server
 
-A recommended way to start up your MariaDB server is to have the root password generated as a onetime password. You will then log on and change this password. MariaDB will not fully function until this onetime password is changed.
+A recommended way to start up your MariaDB server is to have the root password generated on creation of the container. You can then log on and change this password.
 
-Start the container with both environment variables `MARIADB_RANDOM_ROOT_PASSWORD` and `MARIADB_ONETIME_PASSWORD` set to `yes`.
+Start the container with the environment variable `MARIADB_RANDOM_ROOT_PASSWORD` set to `yes`.
 
 Copy the following content to `pod.yaml` file, and run `kubectl create -f pod.yaml`.
 
@@ -165,8 +165,6 @@ spec:
     - image: launcher.gcr.io/google/mariadb10
       name: mariadb
       env:
-        - name: "MARIADB_ONETIME_PASSWORD"
-          value: "yes"
         - name: "MARIADB_RANDOM_ROOT_PASSWORD"
           value: "yes"
 ```
@@ -189,7 +187,7 @@ Open a shell to the container.
 kubectl exec -it some-mariadb -- bash
 ```
 
-Now log in with the generated onetime password.
+Now log in with the generated password.
 
 ```
 mysql -u root -p
@@ -198,7 +196,7 @@ mysql -u root -p
 Once logged in, you can change the root password.
 
 ```
-ALTER USER root IDENTIFIED BY 'new-password';
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('New-Password');
 ```
 
 Also see [Environment Variable reference](#references-environment-variables) for more information.
@@ -259,7 +257,7 @@ spec:
     - image: launcher.gcr.io/google/mariadb10
       name: mariadb
       env:
-        - name: "MARIADB_ROOT_PASSWORD"
+        - name: "MYSQL_ROOT_PASSWORD"
           value: "example-password"
       volumeMounts:
         - name: config
@@ -303,7 +301,7 @@ spec:
         - --character-set-server=utf8mb4
         - --collation-server=utf8mb4_unicode_ci
       env:
-        - name: "MARIADB_ROOT_PASSWORD"
+        - name: "MYSQL_ROOT_PASSWORD"
           value: "example-password"
 ```
 
@@ -334,10 +332,10 @@ kubectl run \
 All databases can be dumped into a `/some/path/all-databases.sql` file on the host using the following command.
 
 ```shell
-kubectl exec -it some-mariadb -- sh -c 'exec mysqldump --all-databases -uroot -p"$MARIADB_ROOT_PASSWORD"' > /some/path/all-databases.sql
+kubectl exec -it some-mariadb -- sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/all-databases.sql
 ```
 
-If your container was not started with a `MARIADB_ROOT_PASSWORD` value, substitute `"$MARIADB_ROOT_PASSWORD"` with the password of the root user. Alternatively, you can use another pair of username as password for `-u` and `-p` arguments.
+If your container was not started with a `MYSQL_ROOT_PASSWORD` value, substitute `"$MYSQL_ROOT_PASSWORD"` with the password of the root user. Alternatively, you can use another pair of username as password for `-u` and `-p` arguments.
 
 # <a name="using-docker"></a>Using Docker
 
@@ -359,7 +357,7 @@ services:
     container_name: some-mariadb
     image: launcher.gcr.io/google/mariadb10
     environment:
-      "MARIADB_ROOT_PASSWORD": "example-password"
+      "MYSQL_ROOT_PASSWORD": "example-password"
     ports:
       - '3306:3306'
 ```
@@ -369,7 +367,7 @@ Or you can use `docker run` directly:
 ```shell
 docker run \
   --name some-mariadb \
-  -e "MARIADB_ROOT_PASSWORD=example-password" \
+  -e "MYSQL_ROOT_PASSWORD=example-password" \
   -p 3306:3306 \
   -d \
   launcher.gcr.io/google/mariadb10
@@ -396,7 +394,7 @@ services:
     container_name: some-mariadb
     image: launcher.gcr.io/google/mariadb10
     environment:
-      "MARIADB_ROOT_PASSWORD": "example-password"
+      "MYSQL_ROOT_PASSWORD": "example-password"
     ports:
       - '3306:3306'
     volumes:
@@ -408,20 +406,20 @@ Or you can use `docker run` directly:
 ```shell
 docker run \
   --name some-mariadb \
-  -e "MARIADB_ROOT_PASSWORD=example-password" \
+  -e "MYSQL_ROOT_PASSWORD=example-password" \
   -p 3306:3306 \
   -v /my/persistent/dir/mysql:/var/lib/mysql \
   -d \
   launcher.gcr.io/google/mariadb10
 ```
 
-Note that once the database directory is established, `MARIADB_ROOT_PASSWORD` will be ignored when the instance restarts.
+Note that once the database directory is established, `MYSQL_ROOT_PASSWORD` will be ignored when the instance restarts.
 
 ### <a name="securely-set-up-the-server-docker"></a>Securely set up the server
 
-A recommended way to start up your MariaDB server is to have the root password generated as a onetime password. You will then log on and change this password. MariaDB will not fully function until this onetime password is changed.
+A recommended way to start up your MariaDB server is to have the root password generated on creation of the container. You can then log on and change this password.
 
-Start the container with both environment variables `MARIADB_RANDOM_ROOT_PASSWORD` and `MARIADB_ONETIME_PASSWORD` set to `yes`.
+Start the container with the environment variable `MARIADB_RANDOM_ROOT_PASSWORD` set to `yes`.
 
 Use the following content for the `docker-compose.yml` file, then run `docker-compose up`.
 
@@ -432,7 +430,6 @@ services:
     container_name: some-mariadb
     image: launcher.gcr.io/google/mariadb10
     environment:
-      "MARIADB_ONETIME_PASSWORD": "yes"
       "MARIADB_RANDOM_ROOT_PASSWORD": "yes"
     ports:
       - '3306:3306'
@@ -443,7 +440,6 @@ Or you can use `docker run` directly:
 ```shell
 docker run \
   --name some-mariadb \
-  -e "MARIADB_ONETIME_PASSWORD=yes" \
   -e "MARIADB_RANDOM_ROOT_PASSWORD=yes" \
   -p 3306:3306 \
   -d \
@@ -458,7 +454,7 @@ Open a shell to the container.
 docker exec -it some-mariadb bash
 ```
 
-Now log in with the generated onetime password.
+Now log in with the generated password.
 
 ```
 mysql -u root -p
@@ -467,7 +463,7 @@ mysql -u root -p
 Once logged in, you can change the root password.
 
 ```
-ALTER USER root IDENTIFIED BY 'new-password';
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('New-Password');
 ```
 
 Also see [Environment Variable reference](#references-environment-variables) for more information.
@@ -514,7 +510,7 @@ services:
     container_name: some-mariadb
     image: launcher.gcr.io/google/mariadb10
     environment:
-      "MARIADB_ROOT_PASSWORD": "example-password"
+      "MYSQL_ROOT_PASSWORD": "example-password"
     ports:
       - '3306:3306'
     volumes:
@@ -526,7 +522,7 @@ Or you can use `docker run` directly:
 ```shell
 docker run \
   --name some-mariadb \
-  -e "MARIADB_ROOT_PASSWORD=example-password" \
+  -e "MYSQL_ROOT_PASSWORD=example-password" \
   -p 3306:3306 \
   -v /my/custom/path/config-file.cnf:/etc/mysql/conf.d/config-file.cnf \
   -d \
@@ -551,7 +547,7 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     environment:
-      "MARIADB_ROOT_PASSWORD": "example-password"
+      "MYSQL_ROOT_PASSWORD": "example-password"
     ports:
       - '3306:3306'
 ```
@@ -561,7 +557,7 @@ Or you can use `docker run` directly:
 ```shell
 docker run \
   --name some-mariadb \
-  -e "MARIADB_ROOT_PASSWORD=example-password" \
+  -e "MYSQL_ROOT_PASSWORD=example-password" \
   -p 3306:3306 \
   -d \
   launcher.gcr.io/google/mariadb10 \
@@ -585,10 +581,10 @@ docker run \
 All databases can be dumped into a `/some/path/all-databases.sql` file on the host using the following command.
 
 ```shell
-docker exec -it some-mariadb sh -c 'exec mysqldump --all-databases -uroot -p"$MARIADB_ROOT_PASSWORD"' > /some/path/all-databases.sql
+docker exec -it some-mariadb sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/all-databases.sql
 ```
 
-If your container was not started with a `MARIADB_ROOT_PASSWORD` value, substitute `"$MARIADB_ROOT_PASSWORD"` with the password of the root user. Alternatively, you can use another pair of username as password for `-u` and `-p` arguments.
+If your container was not started with a `MYSQL_ROOT_PASSWORD` value, substitute `"$MYSQL_ROOT_PASSWORD"` with the password of the root user. Alternatively, you can use another pair of username as password for `-u` and `-p` arguments.
 
 # <a name="references"></a>References
 
@@ -606,12 +602,11 @@ These are the environment variables understood by the container image.
 
 | **Variable** | **Description** |
 |:-------------|:----------------|
-| MARIADB_ROOT_PASSWORD | The password for `root` superuser. Required. <br><br> Instead of the explicit password string, a file path can also be used, in which case the content of the file is the password. |
+| MYSQL_ROOT_PASSWORD | The password for `root` superuser. Required. <br><br> Instead of the explicit password string, a file path can also be used, in which case the content of the file is the password. |
 | MARAIDB_DATABASE | Optionally specifies the name of the database to be created at startup. |
 | MARAIDB_USER | Optionally specifies a new user to be created at startup. Must be used in conjunction with `MARAIDB_PASSWORD`. Note that this user is in addition to the default `root` superuser. <br><br> If `MARAIDB_DATABASE` is also specified, this user will be granted superuser permissions (i.e. `GRANT_ALL`) for that database. |
 | MARAIDB_PASSWORD | Used in conjunction with `MARAIDB_USER` to specify the password. |
 | MARIADB_RANDOM_ROOT_PASSWORD | If set to `yes`, a random initial password for `root` superuser will be generated. This password will be printed to stdout as `GENERATED ROOT PASSWORD: ...` |
-| MARIADB_ONETIME_PASSWORD | If set to `yes`, the initial password for `root` superuser, be it specified via `MARIADB_ROOT_PASSWORD` or randomly generated (see `MARIADB_RANDOM_ROOT_PASSWORD`), must be changed after startup. |
 
 ## <a name="references-volumes"></a>Volumes
 

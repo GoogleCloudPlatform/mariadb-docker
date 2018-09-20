@@ -21,7 +21,7 @@ _templates:
   name: mariadb
   image: *Image
   environment:
-    MARIADB_ROOT_PASSWORD:
+    MYSQL_ROOT_PASSWORD:
       value: example-password
 - &BaseServerRun
   <<: *ServiceArgs
@@ -87,25 +87,22 @@ taskGroups:
             subPath: data
     - description: >-
         Note that once the database directory is established,
-        `MARIADB_ROOT_PASSWORD` will be ignored when the instance restarts.
+        `MYSQL_ROOT_PASSWORD` will be ignored when the instance restarts.
   - title: Securely set up the server
     anchorId: securely-set-up-the-server
     description: >-
       A recommended way to start up your MariaDB server is to have the root
-      password generated as a onetime password. You will then log on and
-      change this password. MariaDB will not fully function until this onetime
-      password is changed.
+      password generated on creation of the container. You can then log on and
+      change this password.
     runtimes: [DOCKER, KUBERNETES]
     instructions:
     - description: >-
-        Start the container with both environment variables
-        `MARIADB_RANDOM_ROOT_PASSWORD` and `MARIADB_ONETIME_PASSWORD` set to `yes`.
+        Start the container with the environment variable
+        `MARIADB_RANDOM_ROOT_PASSWORD` set to `yes`.
       run:
         <<: *BaseServerRun
         environment:
           MARIADB_RANDOM_ROOT_PASSWORD:
-            value: "yes"
-          MARIADB_ONETIME_PASSWORD:
             value: "yes"
     - description: >-
         You can then obtain the generated password by viewing the container log
@@ -116,10 +113,10 @@ taskGroups:
         containerFromRun: *BaseServerRun
         command: bash
         subcommands:
-        - description: Now log in with the generated onetime password.
+        - description: Now log in with the generated password.
           command: mysql -u root -p
         - description: Once logged in, you can change the root password.
-          command: ALTER USER root IDENTIFIED BY 'new-password';
+          command: SET PASSWORD FOR 'root'@'localhost' = PASSWORD('New-Password');
     - description: >-
         Also see [Environment Variable reference](#references-environment-variables)
         for more information.
@@ -204,11 +201,11 @@ taskGroups:
       exec:
         <<: *BaseExec
         containerName: some-mariadb
-        command: sh -c 'exec mysqldump --all-databases -uroot -p"$MARIADB_ROOT_PASSWORD"'
+        command: sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"'
         redirectOutputTo: /some/path/all-databases.sql
     - description: >-
-        If your container was not started with a `MARIADB_ROOT_PASSWORD` value,
-        substitute `"$MARIADB_ROOT_PASSWORD"` with the password of the root user.
+        If your container was not started with a `MYSQL_ROOT_PASSWORD` value,
+        substitute `"$MYSQL_ROOT_PASSWORD"` with the password of the root user.
         Alternatively, you can use another pair of username as password for
         `-u` and `-p` arguments.
 
@@ -219,7 +216,7 @@ portReference:
 
 environmentVariableReference:
   variables:
-  - name: MARIADB_ROOT_PASSWORD
+  - name: MYSQL_ROOT_PASSWORD
     description: >-
       The password for `root` superuser. Required.
       <br><br>
@@ -242,11 +239,6 @@ environmentVariableReference:
       If set to `yes`, a random initial password for `root` superuser will be
       generated. This password will be printed to stdout as
       `GENERATED ROOT PASSWORD: ...`
-  - name: MARIADB_ONETIME_PASSWORD
-    description: >-
-      If set to `yes`, the initial password for `root` superuser, be it
-      specified via `MARIADB_ROOT_PASSWORD` or randomly generated (see
-      `MARIADB_RANDOM_ROOT_PASSWORD`), must be changed after startup.
 
 volumeReference:
   volumes:
