@@ -222,17 +222,17 @@ environmentVariableReference:
       <br><br>
       Instead of the explicit password string, a file path can also be used,
       in which case the content of the file is the password.
-  - name: MARAIDB_DATABASE
+  - name: MYSQL_DATABASE
     description: Optionally specifies the name of the database to be created at startup.
   - name: MYSQL_USER
     description: >-
       Optionally specifies a new user to be created at startup.
-      Must be used in conjunction with `MARAIDB_PASSWORD`. Note that this
+      Must be used in conjunction with `MYSQL_PASSWORD`. Note that this
       user is in addition to the default `root` superuser.
       <br><br>
-      If `MARAIDB_DATABASE` is also specified, this user will be granted
+      If `MYSQL_DATABASE` is also specified, this user will be granted
       superuser permissions (i.e. `GRANT_ALL`) for that database.
-  - name: MARAIDB_PASSWORD
+  - name: MYSQL_PASSWORD
     description: Used in conjunction with `MYSQL_USER` to specify the password.
   - name: MYSQL_RANDOM_ROOT_PASSWORD
     description: >-
