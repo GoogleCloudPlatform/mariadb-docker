@@ -15,8 +15,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 _templates:
-- &Image launcher.gcr.io/google/mariadb10
-- &PullCommand gcloud docker -- pull launcher.gcr.io/google/mariadb10
+- &Image marketplace.gcr.io/google/mariadb10
+- &PullCommand gcloud docker -- pull marketplace.gcr.io/google/mariadb10
 - &ServiceArgs
   name: mariadb
   image: *Image
@@ -36,10 +36,10 @@ _templates:
 
 overview:
   description: |-
-    This image contains an installation MariaDB 10.x.
+    This image contains of installation MariaDB 10.x.
 
     For more information, see the
-    [Official Image Launcher Page](https://console.cloud.google.com/launcher/details/google/mariadb10).
+    [Official Image Marketplace Page](https://console.cloud.google.com/marketplace/details/google/mariadb10).
   dockerfileUrl: https://github.com/GoogleCloudPlatform/mariadb-docker/tree/master/10
   pullCommand: *PullCommand
 
@@ -151,7 +151,7 @@ taskGroups:
     - description: >-
         You will have to enter the password for `some-mariadb-user` to log on,
         even though there might not be a prompt to enter password due to
-        limitation of `kubectl run --attach`.
+        limitations of `kubectl run --attach`.
       applicableRuntimes: [KUBERNETES]
 
 - title: Configurations

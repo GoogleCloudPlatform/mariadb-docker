@@ -1,14 +1,14 @@
 # <a name="about"></a>About
 
-This image contains an installation MariaDB 10.x.
+This image contains of installation MariaDB 10.x.
 
 For more information, see the
-[Official Image Launcher Page](https://console.cloud.google.com/launcher/details/google/mariadb10).
+[Official Image Marketplace Page](https://console.cloud.google.com/marketplace/details/google/mariadb10).
 
 Pull command (first install [gcloud](https://cloud.google.com/sdk/downloads)):
 
 ```shell
-gcloud docker -- pull launcher.gcr.io/google/mariadb10
+gcloud docker -- pull marketplace.gcr.io/google/mariadb10
 ```
 
 Dockerfile for this image can be found [here](https://github.com/GoogleCloudPlatform/mariadb-docker/tree/master/10).
@@ -67,7 +67,7 @@ metadata:
     name: some-mariadb
 spec:
   containers:
-    - image: launcher.gcr.io/google/mariadb10
+    - image: marketplace.gcr.io/google/mariadb10
       name: mariadb
       env:
         - name: "MYSQL_ROOT_PASSWORD"
@@ -105,7 +105,7 @@ metadata:
     name: some-mariadb
 spec:
   containers:
-    - image: launcher.gcr.io/google/mariadb10
+    - image: marketplace.gcr.io/google/mariadb10
       name: mariadb
       env:
         - name: "MYSQL_ROOT_PASSWORD"
@@ -162,7 +162,7 @@ metadata:
     name: some-mariadb
 spec:
   containers:
-    - image: launcher.gcr.io/google/mariadb10
+    - image: marketplace.gcr.io/google/mariadb10
       name: mariadb
       env:
         - name: "MYSQL_RANDOM_ROOT_PASSWORD"
@@ -220,13 +220,13 @@ Assume that we have a MariaDB instance running at `some.mariadb.host` and we wan
 ```shell
 kubectl run \
   some-mariadb-client \
-  --image launcher.gcr.io/google/mariadb10 \
+  --image marketplace.gcr.io/google/mariadb10 \
   --rm --attach --restart=Never \
   -it \
   -- sh -c 'exec mysql -hsome.mariadb.host -usome-mariadb-user -p'
 ```
 
-You will have to enter the password for `some-mariadb-user` to log on, even though there might not be a prompt to enter password due to limitation of `kubectl run --attach`.
+You will have to enter the password for `some-mariadb-user` to log on, even though there might not be a prompt to enter password due to limitations of `kubectl run --attach`.
 
 ## <a name="configurations-kubernetes"></a>Configurations
 
@@ -254,7 +254,7 @@ metadata:
     name: some-mariadb
 spec:
   containers:
-    - image: launcher.gcr.io/google/mariadb10
+    - image: marketplace.gcr.io/google/mariadb10
       name: mariadb
       env:
         - name: "MYSQL_ROOT_PASSWORD"
@@ -295,7 +295,7 @@ metadata:
     name: some-mariadb
 spec:
   containers:
-    - image: launcher.gcr.io/google/mariadb10
+    - image: marketplace.gcr.io/google/mariadb10
       name: mariadb
       args:
         - --character-set-server=utf8mb4
@@ -320,7 +320,7 @@ You can also list all available options (several pages long).
 ```shell
 kubectl run \
   some-mariadb-client \
-  --image launcher.gcr.io/google/mariadb10 \
+  --image marketplace.gcr.io/google/mariadb10 \
   --rm --attach --restart=Never \
   -- --verbose --help
 ```
@@ -355,7 +355,7 @@ version: '2'
 services:
   mariadb:
     container_name: some-mariadb
-    image: launcher.gcr.io/google/mariadb10
+    image: marketplace.gcr.io/google/mariadb10
     environment:
       "MYSQL_ROOT_PASSWORD": "example-password"
     ports:
@@ -370,7 +370,7 @@ docker run \
   -e "MYSQL_ROOT_PASSWORD=example-password" \
   -p 3306:3306 \
   -d \
-  launcher.gcr.io/google/mariadb10
+  marketplace.gcr.io/google/mariadb10
 ```
 
 MariaDB server is accessible on port 3306.
@@ -392,7 +392,7 @@ version: '2'
 services:
   mariadb:
     container_name: some-mariadb
-    image: launcher.gcr.io/google/mariadb10
+    image: marketplace.gcr.io/google/mariadb10
     environment:
       "MYSQL_ROOT_PASSWORD": "example-password"
     ports:
@@ -410,7 +410,7 @@ docker run \
   -p 3306:3306 \
   -v /my/persistent/dir/mysql:/var/lib/mysql \
   -d \
-  launcher.gcr.io/google/mariadb10
+  marketplace.gcr.io/google/mariadb10
 ```
 
 Note that once the database directory is established, `MYSQL_ROOT_PASSWORD` will be ignored when the instance restarts.
@@ -428,7 +428,7 @@ version: '2'
 services:
   mariadb:
     container_name: some-mariadb
-    image: launcher.gcr.io/google/mariadb10
+    image: marketplace.gcr.io/google/mariadb10
     environment:
       "MYSQL_RANDOM_ROOT_PASSWORD": "yes"
     ports:
@@ -443,7 +443,7 @@ docker run \
   -e "MYSQL_RANDOM_ROOT_PASSWORD=yes" \
   -p 3306:3306 \
   -d \
-  launcher.gcr.io/google/mariadb10
+  marketplace.gcr.io/google/mariadb10
 ```
 
 You can then obtain the generated password by viewing the container log and look for the "GENERATED ROOT PASSWORD" line.
@@ -489,7 +489,7 @@ docker run \
   --name some-mariadb-client \
   --rm \
   -it \
-  launcher.gcr.io/google/mariadb10 \
+  marketplace.gcr.io/google/mariadb10 \
   sh -c 'exec mysql -hsome.mariadb.host -usome-mariadb-user -p'
 ```
 
@@ -508,7 +508,7 @@ version: '2'
 services:
   mariadb:
     container_name: some-mariadb
-    image: launcher.gcr.io/google/mariadb10
+    image: marketplace.gcr.io/google/mariadb10
     environment:
       "MYSQL_ROOT_PASSWORD": "example-password"
     ports:
@@ -526,7 +526,7 @@ docker run \
   -p 3306:3306 \
   -v /my/custom/path/config-file.cnf:/etc/mysql/conf.d/config-file.cnf \
   -d \
-  launcher.gcr.io/google/mariadb10
+  marketplace.gcr.io/google/mariadb10
 ```
 
 See [Volume reference](#references-volumes) for more details.
@@ -542,7 +542,7 @@ version: '2'
 services:
   mariadb:
     container_name: some-mariadb
-    image: launcher.gcr.io/google/mariadb10
+    image: marketplace.gcr.io/google/mariadb10
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
@@ -560,7 +560,7 @@ docker run \
   -e "MYSQL_ROOT_PASSWORD=example-password" \
   -p 3306:3306 \
   -d \
-  launcher.gcr.io/google/mariadb10 \
+  marketplace.gcr.io/google/mariadb10 \
   --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 ```
 
@@ -570,7 +570,7 @@ You can also list all available options (several pages long).
 docker run \
   --name some-mariadb-client \
   --rm \
-  launcher.gcr.io/google/mariadb10 \
+  marketplace.gcr.io/google/mariadb10 \
   --verbose --help
 ```
 
