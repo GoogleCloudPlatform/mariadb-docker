@@ -47,7 +47,7 @@ Dockerfile for this image can be found [here](https://github.com/GoogleCloudPlat
 
 # <a name="using-kubernetes"></a>Using Kubernetes
 
-Consult [Launcher container documentation](https://cloud.google.com/launcher/docs/launcher-container)
+Consult [Marketplace container documentation](https://cloud.google.com/marketplace/docs/marketplace-container)
 for additional information about setting up your Kubernetes environment.
 
 ## <a name="running-mariadb-server-kubernetes"></a>Running MariaDB server
