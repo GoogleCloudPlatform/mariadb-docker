@@ -339,7 +339,7 @@ If your container was not started with a `MYSQL_ROOT_PASSWORD` value, substitute
 
 # <a name="using-docker"></a>Using Docker
 
-Consult [Launcher container documentation](https://cloud.google.com/launcher/docs/launcher-container)
+Consult [Marketplace container documentation](https://cloud.google.com/marketplace/docs/marketplace-container)
 for additional information about setting up your Docker environment.
 
 ## <a name="running-mariadb-server-docker"></a>Running MariaDB server
