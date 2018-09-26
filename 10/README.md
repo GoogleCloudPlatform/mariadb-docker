@@ -1,6 +1,6 @@
 # <a name="about"></a>About
 
-This image contains of installation MariaDB 10.x.
+This image contains an installation of MariaDB 10.x.
 
 For more information, see the
 [Official Image Marketplace Page](https://console.cloud.google.com/marketplace/details/google/mariadb10).
