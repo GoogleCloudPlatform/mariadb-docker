@@ -52,11 +52,11 @@ RUN set -ex; \
 		hkp://keyserver.ubuntu.com:80 \
 		pgp.mit.edu \
 	; do \
-		gpg --keyserver $server --recv-keys $GOSU_GPG \
+		gpg --no-tty --keyserver $server --recv-keys $GOSU_GPG \
 			&& found=yes && break; \
 	done; \
 	test -n "$found"; \
-	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
+	gpg --no-tty --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
 	command -v gpgconf > /dev/null && gpgconf --kill all || :; \
 	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
 	\
@@ -112,19 +112,19 @@ RUN set -ex; \
 				hkp://keyserver.ubuntu.com:80 \
 				pgp.mit.edu \
 		; do \
-				gpg --keyserver $server --recv-keys $key \
+				gpg --no-tty --keyserver $server --recv-keys $key \
 						&& found=yes && break; \
 		done; \
 		test -n "$found"; \
 	done; \
-	gpg --export $GPG_KEYS > /etc/apt/trusted.gpg.d/mariadb.gpg; \
+	gpg --no-tty --export $GPG_KEYS > /etc/apt/trusted.gpg.d/mariadb.gpg; \
 	command -v gpgconf > /dev/null && gpgconf --kill all || :; \
 	rm -r "$GNUPGHOME"; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.1
-ENV MARIADB_VERSION 10.1.36+maria-1~stretch
+ENV MARIADB_VERSION 10.1.37+maria-1~stretch
 ENV MARIADB_BACKUP mariadb-backup-10.1
 
 RUN set -e;\
