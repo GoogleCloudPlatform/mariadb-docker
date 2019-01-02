@@ -48,7 +48,7 @@ versions:
     packages:
      gosu: *gosu
      mariadb:
-      version: '10.2.19+maria~stretch'
+      version: '10.2.20+maria~stretch'
       major: '10.2'
       gpg: *gpg10
 
