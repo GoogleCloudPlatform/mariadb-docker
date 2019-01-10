@@ -69,4 +69,4 @@ versions:
       gpg: *gpg10
 
 cloudbuild:
-  enable_parallel: false
+  enable_parallel: true
