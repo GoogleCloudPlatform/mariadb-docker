@@ -79,7 +79,7 @@ versions:
     packages:
      gosu: *gosu
      mariadb:
-      version: '1:10.4.2+maria~bionic'
+      version: '1:10.4.3+maria~bionic'
       major: '10.4'
       gpg: *gpg10
 
