@@ -33,7 +33,7 @@ versions:
     packages:
      gosu: *gosu
      mariadb:
-      version: '10.1.38+maria-1~stretch'
+      version: '10.1.40+maria-1~stretch'
       major: '10.1'
       gpg: *gpg10
 
@@ -48,7 +48,7 @@ versions:
     packages:
      gosu: *gosu
      mariadb:
-      version: '10.2.23+maria~stretch'
+      version: '10.2.24+maria~stretch'
       major: '10.2'
       gpg: *gpg10
 
