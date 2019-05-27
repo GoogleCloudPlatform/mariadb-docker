@@ -124,7 +124,7 @@ RUN set -ex; \
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.1
-ENV MARIADB_VERSION 10.1.38+maria-1~stretch
+ENV MARIADB_VERSION 10.1.40+maria-1~stretch
 ENV MARIADB_BACKUP mariadb-backup-10.1
 
 RUN set -e;\
