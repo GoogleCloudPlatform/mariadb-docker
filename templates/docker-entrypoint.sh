@@ -16,6 +16,13 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+# Enable bash debug if DEBUG_DOCKER_ENTERYPOINT exists
+if [[ ! -z "${DEBUG_DOCKER_ENTERYPOINT}" ]]; then
+	echo "!!! WARNING: DEBUG_DOCKER_ENTERYPOINT is enabled!"
+	echo "!!! WARNING: Use only for debugging. Do not use in production!"
+	set -x
+fi
+
 set -eo pipefail
 shopt -s nullglob
 
@@ -91,6 +98,25 @@ fi
 if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 	# still need to check config, container may have started with --user
 	_check_config "$@"
+
+	# run Galera auto-recovery
+	if [ -f /var/lib/mysql/ibdata1 ]; then
+		file_env 'GALERA_RECOVERY'
+		if [ -z "$GALERA_RECOVERY"  ]; then
+			echo "Galera - Determining recovery position..."
+			set +e
+			start_pos_opt=$("$GALERA_RECOVERY" "${@:2}")
+			set -e
+			if [ $? -eq 0 ]; then
+				echo "Galera recovery position: $start_pos_opt"
+				set -- "$@" $start_pos_opt
+			else
+				echo "ERROR: Galera recovery failed!"
+				exit 1
+			fi
+		fi
+	fi
+
 	# Get config
 	DATADIR="$(_get_config 'datadir' "$@")"
 
