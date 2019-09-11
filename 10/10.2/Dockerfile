@@ -19,6 +19,7 @@ RUN set -ex; \
 # add gosu for easy step-down from root
 ENV GOSU_VERSION 1.10
 ENV GOSU_GPG B42F6819007F00F88E364FD4036A9C25BF357DD4
+ENV C2D_RELEASE ${GOSU_VERSION}
 RUN set -ex; \
 	\
 	fetchDeps=' \
@@ -124,8 +125,10 @@ RUN set -ex; \
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.2
-ENV MARIADB_VERSION 10.2.26+maria~stretch
+ENV MARIADB_VERSION 10.2.26
 ENV MARIADB_BACKUP mariadb-backup-10.2
+ENV C2D_RELEASE ${MARIADB_VERSION}
+
 
 RUN set -e;\
 	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \

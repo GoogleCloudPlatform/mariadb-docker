@@ -19,6 +19,7 @@ _variables:
   gpg10: &gpg10 177F4010FE56CA3336300305F1656F24C74CD1D8
   gosu: &gosu
     version: '1.10'
+    minor: '1.10'
     gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
 
 versions:
@@ -35,6 +36,7 @@ versions:
      mariadb:
       version: '10.1.41+maria-1~stretch'
       major: '10.1'
+      minor: '10.1.41'
       gpg: *gpg10
 
   - dir: '10/10.2'
@@ -50,6 +52,7 @@ versions:
      mariadb:
       version: '10.2.26+maria~stretch'
       major: '10.2'
+      minor: '10.2.26'
       gpg: *gpg10
 
   - dir: '10/10.3'
@@ -66,6 +69,7 @@ versions:
      mariadb:
       version: '1:10.3.17+maria~stretch'
       major: '10.3'
+      minor: '10.3.17'
       gpg: *gpg10
 
 cloudbuild:
