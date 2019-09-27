@@ -59,13 +59,28 @@ versions:
     tags:
       - '10.3-debian9'
       - '10.3'
-      - 'latest'
     from: *from
     packages:
      gosu: *gosu
      mariadb:
       version: '1:10.3.18+maria~stretch'
       major: '10.3'
+      gpg: *gpg10
+
+  - dir: '10/10.4'
+    repo: mariadb10
+    templateArgs:
+      repo: 'mariadb-backup'
+    tags:
+      - '10.4-debian9'
+      - '10.4'
+      - 'latest'
+    from: *from
+    packages:
+     gosu: *gosu
+     mariadb:
+      version: '1:10.4.8+maria~stretch'
+      major: '10.4'
       gpg: *gpg10
 
 cloudbuild:
