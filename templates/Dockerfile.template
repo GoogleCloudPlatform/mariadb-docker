@@ -101,6 +101,7 @@ RUN set -ex; \
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR {{ $mariadb.Major }}
 ENV MARIADB_VERSION {{ $mariadb.Version }}
+ENV C2D_RELEASE {{ $mariadb.Minor}}
 ENV MARIADB_BACKUP {{ $repo }}
 
 RUN set -e;\
