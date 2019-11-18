@@ -27,16 +27,16 @@ versions:
     templateArgs:
       repo: 'mariadb-backup-10.1'
     tags:
-      - '10.1.41-debian9'
-      - '10.1.41'
+      - '10.1.43-debian9'
+      - '10.1.43'
       - '10.1-debian9'
       - '10.1'
     from: *from
     packages:
      gosu: *gosu
      mariadb:
-      version: '10.1.41+maria-1~stretch'
-      minor: '10.1.41'
+      version: '10.1.43+maria-1~stretch'
+      minor: '10.1.43'
       major: '10.1'
       gpg: *gpg10
 
@@ -45,16 +45,16 @@ versions:
     templateArgs:
       repo: 'mariadb-backup-10.2'
     tags:
-      - '10.2.27-debian9'
-      - '10.2.27'
+      - '10.2.29-debian9'
+      - '10.2.29'
       - '10.2-debian9'
       - '10.2'
     from: *from
     packages:
      gosu: *gosu
      mariadb:
-      version: '10.2.27+maria~stretch'
-      minor: '10.2.27'
+      version: '10.2.29+maria~stretch'
+      minor: '10.2.29'
       major: '10.2'
       gpg: *gpg10
 
@@ -63,8 +63,8 @@ versions:
     templateArgs:
       repo: 'mariadb-backup'
     tags:
-      - '10.3.18-debian9'
-      - '10.3.18'
+      - '10.3.20-debian9'
+      - '10.3.20'
       - '10.3-debian9'
       - '10.3'
       - 'latest'
@@ -72,8 +72,8 @@ versions:
     packages:
      gosu: *gosu
      mariadb:
-      version: '1:10.3.18+maria~stretch'
-      minor: '10.3.18'
+      version: '1:10.3.20+maria~stretch'
+      minor: '10.3.20'
       major: '10.3'
       gpg: *gpg10
 
