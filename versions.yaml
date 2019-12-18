@@ -46,13 +46,13 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.2'
-      minor: 10.2.29
-      version: 10.2.29+maria~stretch
+      minor: 10.2.30
+      version: 10.2.30+maria~stretch
   repo: mariadb10
   tags:
-  - 10.2.29-debian9
+  - 10.2.30-debian9
   - 10.2-debian9
-  - 10.2.29
+  - 10.2.30
   - '10.2'
   templateArgs:
     repo: mariadb-backup-10.2
@@ -65,14 +65,14 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.3'
-      minor: 10.3.20
-      version: 1:10.3.20+maria~stretch
+      minor: 10.3.21
+      version: 1:10.3.21+maria~stretch
   repo: mariadb10
   tags:
-  - 10.3.20-debian9
+  - 10.3.21-debian9
   - 10.3-debian9
   - 10-debian9
-  - 10.3.20
+  - 10.3.21
   - '10.3'
   - '10'
   - latest
