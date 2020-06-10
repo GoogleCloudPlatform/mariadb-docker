@@ -27,7 +27,6 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.3'
-      minor: 10.3.23
       version: 1:10.3.23+maria~stretch
   repo: mariadb10
   tags:
@@ -39,6 +38,7 @@ versions:
   - '10'
   - latest
   templateArgs:
+    c2dRelease: 10.3.23
     repo: mariadb-backup
 - dir: 10/debian9/10.2
   from: marketplace.gcr.io/google/debian9
@@ -49,7 +49,6 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.2'
-      minor: 10.2.32
       version: 10.2.32+maria~stretch
   repo: mariadb10
   tags:
@@ -58,6 +57,7 @@ versions:
   - 10.2.32
   - '10.2'
   templateArgs:
+    c2dRelease: 10.2.32
     repo: mariadb-backup-10.2
 - dir: 10/debian9/10.1
   from: marketplace.gcr.io/google/debian9
@@ -68,7 +68,6 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.1'
-      minor: 10.1.45
       version: 10.1.45+maria-1~stretch
   repo: mariadb10
   tags:
@@ -77,5 +76,6 @@ versions:
   - 10.1.45
   - '10.1'
   templateArgs:
+    c2dRelease: 10.1.45
     repo: mariadb-backup-10.1
 
