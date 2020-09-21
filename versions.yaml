@@ -27,18 +27,18 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.3'
-      version: 1:10.3.23+maria~stretch
+      version: 1:10.3.24+maria~stretch
   repo: mariadb10
   tags:
-  - 10.3.23-debian9
+  - 10.3.24-debian9
   - 10.3-debian9
   - 10-debian9
-  - 10.3.23
+  - 10.3.24
   - '10.3'
   - '10'
   - latest
   templateArgs:
-    c2dRelease: 10.3.23
+    c2dRelease: 10.3.24
     repo: mariadb-backup
 - dir: 10/debian9/10.2
   from: marketplace.gcr.io/google/debian9
@@ -49,15 +49,15 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.2'
-      version: 10.2.32+maria~stretch
+      version: 10.2.33+maria~stretch
   repo: mariadb10
   tags:
-  - 10.2.32-debian9
+  - 10.2.33-debian9
   - 10.2-debian9
-  - 10.2.32
+  - 10.2.33
   - '10.2'
   templateArgs:
-    c2dRelease: 10.2.32
+    c2dRelease: 10.2.33
     repo: mariadb-backup-10.2
 - dir: 10/debian9/10.1
   from: marketplace.gcr.io/google/debian9
@@ -68,14 +68,14 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.1'
-      version: 10.1.45+maria-1~stretch
+      version: 10.1.46+maria-1~stretch
   repo: mariadb10
   tags:
-  - 10.1.45-debian9
+  - 10.1.46-debian9
   - 10.1-debian9
-  - 10.1.45
+  - 10.1.46
   - '10.1'
   templateArgs:
-    c2dRelease: 10.1.45
+    c2dRelease: 10.1.46
     repo: mariadb-backup-10.1
 
