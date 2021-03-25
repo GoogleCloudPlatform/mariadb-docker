@@ -15,7 +15,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 _variables:
-  from: &from marketplace.gcr.io/google/debian10:latest
+  from: &from marketplace.gcr.io/google/debian9:latest
   gpg10: &gpg10 177F4010FE56CA3336300305F1656F24C74CD1D8
   gosu: &gosu
     version: '1.10'
@@ -24,10 +24,11 @@ _variables:
 cloudbuild:
   enable_parallel: false
 versions:
-- dir: '10/10.4'
+- dir: '10/debian9/10.4'
   repo: mariadb10
   templateArgs:
     repo: 'mariadb-backup'
+    c2dRelease: 10.4.8
   tags:
     - '10.4.8-debian9'
     - '10.4.8'
