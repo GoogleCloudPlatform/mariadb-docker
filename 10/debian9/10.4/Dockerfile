@@ -123,9 +123,9 @@ RUN set -ex; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
-ENV MARIADB_MAJOR 10.3
-ENV MARIADB_VERSION 1:10.3.28+maria~stretch
-ENV C2D_RELEASE 10.3.28
+ENV MARIADB_MAJOR 10.4
+ENV MARIADB_VERSION 1:10.4.8+maria~stretch
+ENV C2D_RELEASE 10.4.8
 ENV MARIADB_BACKUP mariadb-backup
 
 RUN set -e;\
