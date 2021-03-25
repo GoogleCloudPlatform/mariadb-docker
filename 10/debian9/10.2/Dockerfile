@@ -1,4 +1,4 @@
-FROM gcr.io/google-appengine/debian9:latest
+FROM marketplace.gcr.io/google/debian9
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -123,10 +123,10 @@ RUN set -ex; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
-ENV MARIADB_MAJOR 10.3
-ENV MARIADB_VERSION 1:10.3.18+maria~stretch
-ENV C2D_RELEASE 10.3.18
-ENV MARIADB_BACKUP mariadb-backup
+ENV MARIADB_MAJOR 10.2
+ENV MARIADB_VERSION 10.2.37+maria~stretch
+ENV C2D_RELEASE 10.2.37
+ENV MARIADB_BACKUP mariadb-backup-10.2
 
 RUN set -e;\
 	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \

@@ -1,11 +1,12 @@
+{{- $mariadb := index .Packages "mariadb" -}}
+{{- $repo := index .TemplateArgs "repo" -}}
+{{- $gosu := index .Packages "gosu" -}}
+{{- $c2dRelease := index .TemplateArgs "c2dRelease" -}}
+
 FROM {{ .From }}
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
-
-{{- $mariadb := index .Packages "mariadb" }}
-{{- $repo := index .TemplateArgs "repo" }}
-{{- $gosu := index .Packages "gosu" }}
 
 # https://bugs.debian.org/830696 (apt uses gpgv by default in newer releases, rather than gpg)
 RUN set -ex; \
@@ -101,7 +102,7 @@ RUN set -ex; \
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR {{ $mariadb.Major }}
 ENV MARIADB_VERSION {{ $mariadb.Version }}
-ENV C2D_RELEASE {{ $mariadb.Minor}}
+ENV C2D_RELEASE {{ $c2dRelease }}
 ENV MARIADB_BACKUP {{ $repo }}
 
 RUN set -e;\

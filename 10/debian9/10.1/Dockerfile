@@ -1,4 +1,4 @@
-FROM gcr.io/google-appengine/debian9:latest
+FROM marketplace.gcr.io/google/debian9
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -124,8 +124,8 @@ RUN set -ex; \
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.1
-ENV MARIADB_VERSION 10.1.41+maria-1~stretch
-ENV C2D_RELEASE 10.1.41
+ENV MARIADB_VERSION 10.1.48+maria-1~stretch
+ENV C2D_RELEASE 10.1.48
 ENV MARIADB_BACKUP mariadb-backup-10.1
 
 RUN set -e;\
