@@ -57,8 +57,6 @@ versions:
   - 10-debian9
   - 10.3.28
   - '10.3'
-  - '10'
-  - latest
   templateArgs:
     c2dRelease: 10.3.28
     repo: mariadb-backup
