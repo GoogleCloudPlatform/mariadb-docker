@@ -15,8 +15,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 _variables:
-  from9: &from9 marketplace.gcr.io/google/debian9:latest
-  from10: &from10 marketplace.gcr.io/google/debian10:latest
+  from: &from marketplace.gcr.io/google/debian10
   gpg10: &gpg10 177F4010FE56CA3336300305F1656F24C74CD1D8
   gosu: &gosu
     version: '1.10'
@@ -38,7 +37,7 @@ versions:
     - '10.4'
     - '10'
     - 'latest'
-  from: *from10
+  from: *from
   packages:
    gosu: *gosu
    mariadb:
@@ -47,7 +46,7 @@ versions:
     major: '10.4'
     gpg: *gpg10
 - dir: 10/debian10/10.3
-  from: *from10
+  from: *from
   packages:
     gosu: *gosu
     mariadb:

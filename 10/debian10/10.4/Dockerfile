@@ -1,4 +1,4 @@
-FROM marketplace.gcr.io/google/debian10:latest
+FROM marketplace.gcr.io/google/debian10
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
