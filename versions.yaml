@@ -15,7 +15,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 _variables:
-  from: &from marketplace.gcr.io/google/debian9:latest
+  from9: &from9 marketplace.gcr.io/google/debian9:latest
+  from10: &from10 marketplace.gcr.io/google/debian10:latest
   gpg10: &gpg10 177F4010FE56CA3336300305F1656F24C74CD1D8
   gosu: &gosu
     version: '1.10'
@@ -24,74 +25,43 @@ _variables:
 cloudbuild:
   enable_parallel: false
 versions:
-- dir: '10/debian9/10.4'
+- dir: '10/debian10/10.4'
   repo: mariadb10
   templateArgs:
     repo: 'mariadb-backup'
-    c2dRelease: 10.4.8
+    c2dRelease: 10.4.18
+    distro: buster
   tags:
-    - '10.4.8-debian9'
-    - '10.4.8'
-    - '10.4-debian9'
+    - '10.4.18-debian10'
+    - '10.4.18'
+    - '10.4-debian10'
     - '10.4'
+    - '10'
     - 'latest'
-  from: *from
+  from: *from10
   packages:
    gosu: *gosu
    mariadb:
-    version: '1:10.4.8+maria~stretch'
-    minor: '10.4.8'
+    version: '1:10.4.18+maria~buster'
+    minor: '10.4.18'
     major: '10.4'
     gpg: *gpg10
-- dir: 10/debian9/10.3
-  from: *from
+- dir: 10/debian10/10.3
+  from: *from10
   packages:
     gosu: *gosu
     mariadb:
       gpg: *gpg10
       major: '10.3'
-      version: 1:10.3.28+maria~stretch
+      version: 1:10.3.28+maria~buster
   repo: mariadb10
   tags:
-  - 10.3.28-debian9
-  - 10.3-debian9
-  - 10-debian9
+  - 10.3.28-debian10
+  - 10.3-debian10
+  - 10-debian10
   - 10.3.28
   - '10.3'
   templateArgs:
     c2dRelease: 10.3.28
     repo: mariadb-backup
-- dir: 10/debian9/10.2
-  from: *from
-  packages:
-    gosu: *gosu
-    mariadb:
-      gpg: *gpg10
-      major: '10.2'
-      version: 10.2.37+maria~stretch
-  repo: mariadb10
-  tags:
-  - 10.2.37-debian9
-  - 10.2-debian9
-  - 10.2.37
-  - '10.2'
-  templateArgs:
-    c2dRelease: 10.2.37
-    repo: mariadb-backup-10.2
-- dir: 10/debian9/10.1
-  from: *from
-  packages:
-    gosu: *gosu
-    mariadb:
-      gpg: *gpg10
-      major: '10.1'
-      version: 10.1.48+maria-1~stretch
-  repo: mariadb10
-  tags:
-  - 10.1.48-debian9
-  - 10.1-debian9
-  - 10.1.48
-  - '10.1'
-  templateArgs:
-    c2dRelease: 10.1.48
-    repo: mariadb-backup-10.1
+    distro: buster

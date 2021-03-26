@@ -1,5 +1,6 @@
 {{- $mariadb := index .Packages "mariadb" -}}
 {{- $repo := index .TemplateArgs "repo" -}}
+{{- $distro := index .TemplateArgs "distro" -}}
 {{- $gosu := index .Packages "gosu" -}}
 {{- $c2dRelease := index .TemplateArgs "c2dRelease" -}}
 
@@ -106,7 +107,7 @@ ENV C2D_RELEASE {{ $c2dRelease }}
 ENV MARIADB_BACKUP {{ $repo }}
 
 RUN set -e;\
-	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \
+	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian {{ $distro }} main" > /etc/apt/sources.list.d/mariadb.list; \
 	{ \
 		echo 'Package: *'; \
 		echo 'Pin: release o=MariaDB'; \
