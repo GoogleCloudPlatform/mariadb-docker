@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2021 Google LLC
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,18 +27,18 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.3'
-      version: 1:10.3.28+maria~stretch
+      version: 1:10.3.29+maria~stretch
   repo: mariadb10
   tags:
-  - 10.3.28-debian9
+  - 10.3.29-debian9
   - 10.3-debian9
   - 10-debian9
-  - 10.3.28
+  - 10.3.29
   - '10.3'
   - '10'
   - latest
   templateArgs:
-    c2dRelease: 10.3.28
+    c2dRelease: 10.3.29
     repo: mariadb-backup
 - dir: 10/debian9/10.2
   from: marketplace.gcr.io/google/debian9
@@ -49,15 +49,15 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.2'
-      version: 10.2.37+maria~stretch
+      version: 10.2.38+maria~stretch
   repo: mariadb10
   tags:
-  - 10.2.37-debian9
+  - 10.2.38-debian9
   - 10.2-debian9
-  - 10.2.37
+  - 10.2.38
   - '10.2'
   templateArgs:
-    c2dRelease: 10.2.37
+    c2dRelease: 10.2.38
     repo: mariadb-backup-10.2
 - dir: 10/debian9/10.1
   from: marketplace.gcr.io/google/debian9
