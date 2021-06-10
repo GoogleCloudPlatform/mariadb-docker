@@ -15,31 +15,25 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-# Enable bash debug if DEBUG_DOCKER_ENTERYPOINT exists
-if [[ ! -z "${DEBUG_DOCKER_ENTERYPOINT}" ]]; then
-	echo "!!! WARNING: DEBUG_DOCKER_ENTERYPOINT is enabled!"
-	echo "!!! WARNING: Use only for debugging. Do not use in production!"
-	set -x
-fi
-
 set -eo pipefail
 shopt -s nullglob
 
-# if command starts with an option, prepend mysqld
-if [ "${1:0:1}" = '-' ]; then
-	set -- mysqld "$@"
-fi
+# logging functions
+mysql_log() {
+	local type="$1"; shift
+	printf '%s [%s] [Entrypoint]: %s\n' "$(date --rfc-3339=seconds)" "$type" "$*"
+}
+mysql_note() {
+	mysql_log Note "$@"
+}
+mysql_warn() {
+	mysql_log Warn "$@" >&2
+}
+mysql_error() {
+	mysql_log ERROR "$@" >&2
+	exit 1
+}
 
-# skip setup if they want an option that stops mysqld
-wantHelp=
-for arg; do
-	case "$arg" in
-		-'?'|--help|--print-defaults|-V|--version)
-			wantHelp=1
-			break
-			;;
-	esac
-done
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
@@ -60,6 +54,72 @@ file_env() {
 	export "$var"="$val"
 	unset "$fileVar"
 }
+
+# set MARIADB_xyz from MYSQL_xyz when MARIADB_xyz is unset
+# and make them the same value (so user scripts can use either)
+_mariadb_file_env() {
+	local var="$1"; shift
+	local maria="MARIADB_${var#MYSQL_}"
+	file_env "$var" "$@"
+	file_env "$maria" "${!var}"
+	if [ "${!maria:-}" ]; then
+		export "$var"="${!maria}"
+	fi
+}
+
+# check to see if this file is being run or sourced from another script
+_is_sourced() {
+	# https://unix.stackexchange.com/a/215279
+	[ "${#FUNCNAME[@]}" -ge 2 ] \
+		&& [ "${FUNCNAME[0]}" = '_is_sourced' ] \
+		&& [ "${FUNCNAME[1]}" = 'source' ]
+}
+
+# usage: docker_process_init_files [file [file [...]]]
+#    ie: docker_process_init_files /always-initdb.d/*
+# process initializer files, based on file extensions
+docker_process_init_files() {
+	# mysql here for backwards compatibility "${mysql[@]}"
+	mysql=( docker_process_sql )
+
+	echo
+	local f
+	for f; do
+		case "$f" in
+			*.sh)
+				# https://github.com/docker-library/postgres/issues/450#issuecomment-393167936
+				# https://github.com/docker-library/postgres/pull/452
+				if [ -x "$f" ]; then
+					mysql_note "$0: running $f"
+					"$f"
+				else
+					mysql_note "$0: sourcing $f"
+					. "$f"
+				fi
+				;;
+			*.sql)     mysql_note "$0: running $f"; docker_process_sql < "$f"; echo ;;
+			*.sql.gz)  mysql_note "$0: running $f"; gunzip -c "$f" | docker_process_sql; echo ;;
+			*.sql.xz)  mysql_note "$0: running $f"; xzcat "$f" | docker_process_sql; echo ;;
+			*.sql.zst) mysql_note "$0: running $f"; zstd -dc "$f" | docker_process_sql; echo ;;
+			*)         mysql_warn "$0: ignoring $f" ;;
+		esac
+		echo
+	done
+}
+
+# arguments necessary to run "mysqld --verbose --help" successfully (used for testing configuration validity and for extracting default/configured values)
+_verboseHelpArgs=(
+	--verbose --help
+	--log-bin-index="$(mktemp -u)" # https://github.com/docker-library/mysql/issues/136
+)
+
+mysql_check_config() {
+	local toRun=( "$@" "${_verboseHelpArgs[@]}" ) errors
+	if ! errors="$("${toRun[@]}" 2>&1 >/dev/null)"; then
+		mysql_error $'mysqld failed while attempting to check config\n\tcommand was: '"${toRun[*]}"$'\n\t'"$errors"
+	fi
+}
+
 # Fetch value from server config
 # We use mysqld --verbose --help instead of my_print_defaults because the
 # latter only show values present in config files, and not server defaults
@@ -108,6 +168,12 @@ docker_verify_minimum_env() {
 }
 
 # creates folders for the database
+# also ensures permission for user mysql of run as root
+docker_create_db_directories() {
+	local user; user="$(id -u)"
+
+	# TODO other directories that are used by default? like /var/lib/mysql-files
+	# see https://github.com/docker-library/mysql/issues/562
 	mkdir -p "$DATADIR"
 
 	if [ "$user" = "0" ]; then
@@ -160,6 +226,60 @@ docker_setup_env() {
 		DATABASE_ALREADY_EXISTS='true'
 	fi
 }
+
+# Execute the client, use via docker_process_sql to handle root password
+docker_exec_client() {
+	# args sent in can override this db, since they will be later in the command
+	if [ -n "$MYSQL_DATABASE" ]; then
+		set -- --database="$MYSQL_DATABASE" "$@"
+	fi
+	mysql --protocol=socket -uroot -hlocalhost --socket="${SOCKET}" "$@"
+}
+
+# Execute sql script, passed via stdin
+# usage: docker_process_sql [--dont-use-mysql-root-password] [mysql-cli-args]
+#    ie: docker_process_sql --database=mydb <<<'INSERT ...'
+#    ie: docker_process_sql --dont-use-mysql-root-password --database=mydb <my-file.sql
+docker_process_sql() {
+	passfileArgs=()
+	if [ '--dont-use-mysql-root-password' = "$1" ]; then
+		shift
+		MYSQL_PWD= docker_exec_client "$@"
+	else
+		MYSQL_PWD=$MARIADB_ROOT_PASSWORD docker_exec_client "$@"
+	fi
+}
+
+# SQL escape the string $1 to be placed in a string literal.
+# escape, \ followed by '
+docker_sql_escape_string_literal() {
+	local escaped=${1//\\/\\\\}
+	echo "${escaped//\'/\\\'}"
+}
+
+# Initializes database with timezone info and root password, plus optional extra db/user
+docker_setup_db() {
+	# Load timezone info into database
+	if [ -z "$MARIADB_INITDB_SKIP_TZINFO" ]; then
+		{
+			# Aria in 10.4+ is slow due to "transactional" (crash safety)
+			# https://jira.mariadb.org/browse/MDEV-23326
+			# https://github.com/docker-library/mariadb/issues/262
+			local tztables=( time_zone time_zone_leap_second time_zone_name time_zone_transition time_zone_transition_type )
+			for table in "${tztables[@]}"; do
+				echo "/*!100400 ALTER TABLE $table TRANSACTIONAL=0 */;"
+			done
+
+			# sed is for https://bugs.mysql.com/bug.php?id=20545
+			mysql_tzinfo_to_sql /usr/share/zoneinfo \
+				| sed 's/Local time zone must be set--see zic manual page/FCTY/'
+
+			for table in "${tztables[@]}"; do
+				echo "/*!100400 ALTER TABLE $table TRANSACTIONAL=1 */;"
+			done
+		} | docker_process_sql --dont-use-mysql-root-password --database=mysql
+		# tell docker_process_sql to not use MYSQL_ROOT_PASSWORD since it is not set yet
+	fi
 	# Generate random root password
 	if [ -n "$MARIADB_RANDOM_ROOT_PASSWORD" ]; then
 		MARIADB_ROOT_PASSWORD="$(pwgen --numerals --capitalize --symbols --remove-chars="'\\" -1 32)"
@@ -180,6 +300,26 @@ docker_setup_env() {
 			GRANT ALL ON *.* TO 'root'@'${MARIADB_ROOT_HOST}' WITH GRANT OPTION ;
 		EOSQL
 	fi
+
+	# tell docker_process_sql to not use MARIADB_ROOT_PASSWORD since it is just now being set
+	# --binary-mode to save us from the semi-mad users go out of their way to confuse the encoding.
+	docker_process_sql --dont-use-mysql-root-password --database=mysql --binary-mode <<-EOSQL
+		-- What's done in this file shouldn't be replicated
+		--  or products like mysql-fabric won't work
+		SET @@SESSION.SQL_LOG_BIN=0;
+                -- we need the SQL_MODE NO_BACKSLASH_ESCAPES mode to be clear for the password to be set
+		SET @@SESSION.SQL_MODE=REPLACE(@@SESSION.SQL_MODE, 'NO_BACKSLASH_ESCAPES', '');
+		DELETE FROM mysql.user WHERE user NOT IN ('mysql.sys', 'mariadb.sys', 'mysqlxsys', 'root') OR host NOT IN ('localhost') ;
+		SET PASSWORD FOR 'root'@'localhost'=PASSWORD('${rootPasswordEscaped}') ;
+		-- 10.1: https://github.com/MariaDB/server/blob/d925aec1c10cebf6c34825a7de50afe4e630aff4/scripts/mysql_secure_installation.sh#L347-L365
+		-- 10.5: https://github.com/MariaDB/server/blob/00c3a28820c67c37ebbca72691f4897b57f2eed5/scripts/mysql_secure_installation.sh#L351-L369
+		DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%' ;
+		GRANT ALL ON *.* TO 'root'@'localhost' WITH GRANT OPTION ;
+		FLUSH PRIVILEGES ;
+		${rootCreate}
+		DROP DATABASE IF EXISTS test ;
+	EOSQL
+
 	# Creates a custom database and user if specified
 	if [ -n "$MARIADB_DATABASE" ]; then
 		mysql_note "Creating database ${MARIADB_DATABASE}"
@@ -265,3 +405,8 @@ _main() {
 	fi
 	exec "$@"
 }
+
+# If we are sourced from elsewhere, don't perform any further actions
+if ! _is_sourced; then
+	_main "$@"
+fi
