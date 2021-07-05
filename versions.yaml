@@ -52,10 +52,10 @@ versions:
       version: 1:10.3.29+maria~stretch
   repo: mariadb10
   tags:
-  - 10.3.29-debian9
+  - 10.3.30-debian9
   - 10.3-debian9
-  - 10.3.29
+  - 10.3.30
   - '10.3'
   templateArgs:
-    c2dRelease: 10.3.29
+    c2dRelease: 10.3.30
     repo: mariadb-backup
