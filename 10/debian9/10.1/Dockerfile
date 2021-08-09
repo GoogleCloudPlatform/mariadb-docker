@@ -115,10 +115,10 @@ RUN set -ex; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
-ENV MARIADB_MAJOR 10.3
-ENV MARIADB_VERSION 1:10.3.31+maria~stretch
-ENV C2D_RELEASE 10.3.31
-ENV MARIADB_BACKUP mariadb-backup
+ENV MARIADB_MAJOR 10.1
+ENV MARIADB_VERSION 10.1.48+maria-1~stretch
+ENV C2D_RELEASE 10.1.48
+ENV MARIADB_BACKUP mariadb-backup-10.1
 
 RUN set -e;\
 	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \
