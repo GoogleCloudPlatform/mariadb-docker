@@ -116,12 +116,12 @@ RUN set -ex; \
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.6
-ENV MARIADB_VERSION 1:10.6.3+maria~stretch
-ENV C2D_RELEASE 10.6.3
+ENV MARIADB_VERSION 1:10.6.4+maria~stretch
+ENV C2D_RELEASE 10.6.4
 ENV MARIADB_BACKUP mariadb-backup
 
 RUN set -e;\
-	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \
+	echo "deb http://archive.mariadb.org/mariadb-$C2D_RELEASE/repo/debian/ stretch main" > /etc/apt/sources.list.d/mariadb.list; \
 	{ \
 		echo 'Package: *'; \
 		echo 'Pin: release o=MariaDB'; \

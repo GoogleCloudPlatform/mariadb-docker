@@ -27,18 +27,18 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.6'
-      version: 1:10.6.3+maria~stretch
+      version: 1:10.6.4+maria~stretch
   repo: mariadb10
   tags:
-  - 10.6.3-debian9
+  - 10.6.4-debian9
   - 10.6-debian9
   - 10-debian9
-  - 10.6.3
+  - 10.6.4
   - '10.6'
   - '10'
   - latest
   templateArgs:
-    c2dRelease: 10.6.3
+    c2dRelease: 10.6.4
     repo: mariadb-backup
 - dir: 10/debian9/10.3
   from: marketplace.gcr.io/google/debian9
