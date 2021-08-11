@@ -7,7 +7,7 @@ RUN groupadd -r mysql && useradd -r -g mysql mysql
 RUN set -ex; \
 	apt-get update; \
 	if ! which gpg; then \
-		apt-get install -y --no-install-recommends gnupg; \
+		apt-get install -y --no-install-recommends gnupg apt-transport-https; \
 	fi; \
 	if ! gpg --version | grep -q '^gpg (GnuPG) 1\.'; then \
 # Ubuntu includes "gnupg" (not "gnupg2", but still 2.x), but not dirmngr, and gnupg 2.x requires dirmngr
@@ -121,7 +121,7 @@ ENV C2D_RELEASE 10.6.4
 ENV MARIADB_BACKUP mariadb-backup
 
 RUN set -e;\
-	echo "deb https://archive.mariadb.org/mariadb-$C2D_RELEASE/repo/debian/ stretch main" > /etc/apt/sources.list.d/mariadb.list; \
+	echo "deb http://archive.mariadb.org/mariadb-$C2D_RELEASE/repo/debian/ stretch main" > /etc/apt/sources.list.d/mariadb.list; \
 	{ \
 		echo 'Package: *'; \
 		echo 'Pin: release o=MariaDB'; \
