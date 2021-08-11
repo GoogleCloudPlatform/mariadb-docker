@@ -7,7 +7,7 @@ RUN groupadd -r mysql && useradd -r -g mysql mysql
 RUN set -ex; \
 	apt-get update; \
 	if ! which gpg; then \
-		apt-get install -y --no-install-recommends gnupg; \
+		apt-get install -y --no-install-recommends gnupg apt-transport-https; \
 	fi; \
 	if ! gpg --version | grep -q '^gpg (GnuPG) 1\.'; then \
 # Ubuntu includes "gnupg" (not "gnupg2", but still 2.x), but not dirmngr, and gnupg 2.x requires dirmngr
@@ -116,8 +116,8 @@ RUN set -ex; \
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.3
-ENV MARIADB_VERSION 1:10.3.30+maria~stretch
-ENV C2D_RELEASE 10.3.30
+ENV MARIADB_VERSION 1:10.3.31+maria~stretch
+ENV C2D_RELEASE 10.3.31
 ENV MARIADB_BACKUP mariadb-backup
 
 RUN set -e;\
