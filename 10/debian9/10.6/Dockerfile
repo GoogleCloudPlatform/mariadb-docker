@@ -7,7 +7,7 @@ RUN groupadd -r mysql && useradd -r -g mysql mysql
 RUN set -ex; \
 	apt-get update; \
 	if ! which gpg; then \
-		apt-get install -y --no-install-recommends gnupg; \
+		apt-get install -y --no-install-recommends gnupg apt-transport-https; \
 	fi; \
 	if ! gpg --version | grep -q '^gpg (GnuPG) 1\.'; then \
 # Ubuntu includes "gnupg" (not "gnupg2", but still 2.x), but not dirmngr, and gnupg 2.x requires dirmngr
@@ -24,7 +24,6 @@ RUN set -ex; \
 	fetchDeps=' \
 		ca-certificates \
 		wget \
-		apt-transport-https \
 	'; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends $fetchDeps; \
