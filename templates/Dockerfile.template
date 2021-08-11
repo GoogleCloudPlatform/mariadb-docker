@@ -98,7 +98,7 @@ ENV C2D_RELEASE {{ $c2dRelease }}
 ENV MARIADB_BACKUP {{ $repo }}
 
 RUN set -e;\
-	echo "deb http://archive.mariadb.org/mariadb-$C2D_RELEASE/repo/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \
+	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \
 	{ \
 		echo 'Package: *'; \
 		echo 'Pin: release o=MariaDB'; \
