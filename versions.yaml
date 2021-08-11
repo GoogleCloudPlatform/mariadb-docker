@@ -49,13 +49,13 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.3'
-      version: 1:10.3.30+maria~stretch
+      version: 1:10.3.31+maria~stretch
   repo: mariadb10
   tags:
-  - 10.3.30-debian9
+  - 10.3.31-debian9
   - 10.3-debian9
-  - 10.3.30
+  - 10.3.31
   - '10.3'
   templateArgs:
-    c2dRelease: 10.3.30
+    c2dRelease: 10.3.31
     repo: mariadb-backup
