@@ -29,6 +29,7 @@ RUN set -ex; \
 	fetchDeps=' \
 		ca-certificates \
 		wget \
+		openssl \
 	'; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends $fetchDeps; \

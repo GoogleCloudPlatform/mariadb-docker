@@ -1,4 +1,4 @@
-FROM marketplace.gcr.io/google/debian9
+FROM marketplace.gcr.io/google/debian11
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -24,6 +24,7 @@ RUN set -ex; \
 	fetchDeps=' \
 		ca-certificates \
 		wget \
+		openssl \
 	'; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends $fetchDeps; \
@@ -115,9 +116,9 @@ RUN set -ex; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
-ENV MARIADB_MAJOR 10.6
-ENV MARIADB_VERSION 1:10.6.8+maria~stretch
-ENV C2D_RELEASE 10.6.8
+ENV MARIADB_MAJOR 10.9
+ENV MARIADB_VERSION 1:10.9.1+maria~bullseye
+ENV C2D_RELEASE 10.9.1
 ENV MARIADB_BACKUP mariadb-backup
 
 RUN set -e;\
