@@ -60,7 +60,7 @@ RUN set -ex; \
 
 RUN mkdir /docker-entrypoint-initdb.d
 
-# install "libjemalloc1" as it offers better performance in some cases. Use with LD_PRELOAD
+# install "libjemalloc2" as it offers better performance in some cases. Use with LD_PRELOAD
 # install "pwgen" for randomizing passwords
 # install "tzdata" for /usr/share/zoneinfo/
 # install "xz-utils" for .sql.xz docker-entrypoint-initdb.d files
@@ -68,7 +68,7 @@ RUN mkdir /docker-entrypoint-initdb.d
 RUN set -ex; \
 	apt-get update; \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-		libjemalloc1 \
+		libjemalloc2 \
 		pwgen \
 		tzdata \
 		xz-utils \
