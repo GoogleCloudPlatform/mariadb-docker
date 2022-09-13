@@ -117,8 +117,8 @@ RUN set -ex; \
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.9
-ENV MARIADB_VERSION 1:10.9.1+maria~bullseye
-ENV C2D_RELEASE 10.9.1
+ENV MARIADB_VERSION 1:10.9.2+maria~bullseye
+ENV C2D_RELEASE 10.9.2
 ENV MARIADB_BACKUP mariadb-backup
 
 RUN set -e;\
@@ -140,7 +140,7 @@ RUN set -ex; \
 	} | debconf-set-selections; \
 	apt-get update; \
 	apt-get install -y \
-		"mariadb-server=${MARIADB_VERSION}" \
+		"mariadb-server" \
 # mariadb-backup is installed at the same time so that `mysql-common` is only installed once from just mariadb repos
 		$MARIADB_BACKUP \
 		socat \
