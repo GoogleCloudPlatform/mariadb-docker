@@ -1,4 +1,4 @@
-FROM marketplace.gcr.io/google/debian9
+FROM marketplace.gcr.io/google/debian11
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -24,6 +24,7 @@ RUN set -ex; \
 	fetchDeps=' \
 		ca-certificates \
 		wget \
+		openssl \
 	'; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends $fetchDeps; \
@@ -68,7 +69,7 @@ RUN set -ex; \
 
 RUN mkdir /docker-entrypoint-initdb.d
 
-# install "libjemalloc1" as it offers better performance in some cases. Use with LD_PRELOAD
+# install "libjemalloc2" as it offers better performance in some cases. Use with LD_PRELOAD
 # install "pwgen" for randomizing passwords
 # install "tzdata" for /usr/share/zoneinfo/
 # install "xz-utils" for .sql.xz docker-entrypoint-initdb.d files
@@ -76,7 +77,7 @@ RUN mkdir /docker-entrypoint-initdb.d
 RUN set -ex; \
 	apt-get update; \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-		libjemalloc1 \
+		libjemalloc2 \
 		pwgen \
 		tzdata \
 		xz-utils \
@@ -116,12 +117,12 @@ RUN set -ex; \
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.6
-ENV MARIADB_VERSION 1:10.6.8+maria~stretch
+ENV MARIADB_VERSION 1:10.6.8+maria~bullseye
 ENV C2D_RELEASE 10.6.8
 ENV MARIADB_BACKUP mariadb-backup
 
 RUN set -e;\
-	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \
+	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian bullseye main" > /etc/apt/sources.list.d/mariadb.list; \
 	{ \
 		echo 'Package: *'; \
 		echo 'Pin: release o=MariaDB'; \
@@ -139,7 +140,7 @@ RUN set -ex; \
 	} | debconf-set-selections; \
 	apt-get update; \
 	apt-get install -y \
-		"mariadb-server=${MARIADB_VERSION}" \
+		"mariadb-server" \
 # mariadb-backup is installed at the same time so that `mysql-common` is only installed once from just mariadb repos
 		$MARIADB_BACKUP \
 		socat \

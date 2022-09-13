@@ -29,6 +29,7 @@ RUN set -ex; \
 	fetchDeps=' \
 		ca-certificates \
 		wget \
+		openssl \
 	'; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends $fetchDeps; \
@@ -59,7 +60,7 @@ RUN set -ex; \
 
 RUN mkdir /docker-entrypoint-initdb.d
 
-# install "libjemalloc1" as it offers better performance in some cases. Use with LD_PRELOAD
+# install "libjemalloc2" as it offers better performance in some cases. Use with LD_PRELOAD
 # install "pwgen" for randomizing passwords
 # install "tzdata" for /usr/share/zoneinfo/
 # install "xz-utils" for .sql.xz docker-entrypoint-initdb.d files
@@ -67,7 +68,7 @@ RUN mkdir /docker-entrypoint-initdb.d
 RUN set -ex; \
 	apt-get update; \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-		libjemalloc1 \
+		libjemalloc2 \
 		pwgen \
 		tzdata \
 		xz-utils \
@@ -98,7 +99,7 @@ ENV C2D_RELEASE {{ $c2dRelease }}
 ENV MARIADB_BACKUP {{ $repo }}
 
 RUN set -e;\
-	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list; \
+	echo "deb http://ftp.osuosl.org/pub/mariadb/repo/$MARIADB_MAJOR/debian bullseye main" > /etc/apt/sources.list.d/mariadb.list; \
 	{ \
 		echo 'Package: *'; \
 		echo 'Pin: release o=MariaDB'; \
@@ -116,7 +117,7 @@ RUN set -ex; \
 	} | debconf-set-selections; \
 	apt-get update; \
 	apt-get install -y \
-		"mariadb-server=${MARIADB_VERSION}" \
+		"mariadb-server" \
 # mariadb-backup is installed at the same time so that `mysql-common` is only installed once from just mariadb repos
 		$MARIADB_BACKUP \
 		socat \
