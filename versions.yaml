@@ -18,8 +18,8 @@
 cloudbuild:
   enable_parallel: false
 versions:
-- dir: 10/debian11/10.9
-  from: marketplace.gcr.io/google/debian11
+- dir: 10/debian9/10.9
+  from: marketplace.gcr.io/google/debian9
   packages:
     gosu:
       gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
@@ -30,9 +30,9 @@ versions:
       version: 1:10.9.2+maria~bullseye
   repo: mariadb10
   tags:
-  - 10.9.2-debian11
-  - 10.9-debian11
-  - 10-debian11
+  - 10.9.2-debian9
+  - 10.9-debian9
+  - 10-debian9
   - 10.9.2
   - '10.9'
   - '10'
@@ -40,8 +40,8 @@ versions:
   templateArgs:
     c2dRelease: 10.9.2
     repo: mariadb-backup
-- dir: 10/debian11/10.6
-  from: marketplace.gcr.io/google/debian11
+- dir: 10/debian9/10.6
+  from: marketplace.gcr.io/google/debian9
   packages:
     gosu:
       gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
@@ -49,11 +49,11 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.6'
-      version: 1:10.6.8+maria~bullseye
+      version: 1:10.6.8+maria~stretch
   repo: mariadb10
   tags:
-  - 10.6.8-debian11
-  - 10.6-debian11
+  - 10.6.8-debian9
+  - 10.6-debian9
   - 10.6.8
   - '10.6'
   templateArgs:

@@ -1,4 +1,4 @@
-FROM marketplace.gcr.io/google/debian11
+FROM marketplace.gcr.io/google/debian9
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -117,7 +117,7 @@ RUN set -ex; \
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
 ENV MARIADB_MAJOR 10.6
-ENV MARIADB_VERSION 1:10.6.8+maria~bullseye
+ENV MARIADB_VERSION 1:10.6.8+maria~stretch
 ENV C2D_RELEASE 10.6.8
 ENV MARIADB_BACKUP mariadb-backup
 
