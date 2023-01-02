@@ -23,7 +23,7 @@ versions:
   packages:
     gosu:
       gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
-      version: '1.12'
+      version: '1.11'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.11'
@@ -45,7 +45,7 @@ versions:
   packages:
     gosu:
       gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
-      version: '1.12'
+      version: '1.11'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.9'
@@ -64,7 +64,7 @@ versions:
   packages:
     gosu:
       gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
-      version: '1.12'
+      version: '1.11'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.6'
