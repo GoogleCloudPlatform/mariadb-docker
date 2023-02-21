@@ -1,4 +1,4 @@
-FROM marketplace.gcr.io/google/debian11
+FROM marketplace.gcr.io/google/c2d-debian11
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -17,7 +17,7 @@ RUN set -ex; \
 	rm -rf /var/lib/apt/lists/*
 
 # add gosu for easy step-down from root
-ENV GOSU_VERSION 1.11
+ENV GOSU_VERSION 1.12
 ENV GOSU_GPG B42F6819007F00F88E364FD4036A9C25BF357DD4
 RUN set -ex; \
 	\
