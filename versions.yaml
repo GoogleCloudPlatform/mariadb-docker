@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2023 Google LLC
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@ cloudbuild:
   enable_parallel: false
 versions:
 - dir: 10/debian11/10.11
-  from: marketplace.gcr.io/google/debian11
+  from: marketplace.gcr.io/google/c2d-debian11
   packages:
     gosu:
       gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
-      version: '1.11'
+      version: '1.12'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.11'
@@ -39,43 +39,5 @@ versions:
   - latest
   templateArgs:
     c2dRelease: 10.11.1
-    repo: mariadb-backup
-- dir: 10/debian11/10.9
-  from: marketplace.gcr.io/google/debian11
-  packages:
-    gosu:
-      gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
-      version: '1.11'
-    mariadb:
-      gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
-      major: '10.9'
-      version: 1:10.9.2+maria~bullseye
-  repo: mariadb10
-  tags:
-  - 10.9.2-debian11
-  - 10.9-debian11
-  - 10.9.2
-  - '10.9'
-  templateArgs:
-    c2dRelease: 10.9.2
-    repo: mariadb-backup
-- dir: 10/debian11/10.6
-  from: marketplace.gcr.io/google/debian11
-  packages:
-    gosu:
-      gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
-      version: '1.11'
-    mariadb:
-      gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
-      major: '10.6'
-      version: 1:10.6.8+maria~bullseye
-  repo: mariadb10
-  tags:
-  - 10.6.8-debian11
-  - 10.6-debian11
-  - 10.6.8
-  - '10.6'
-  templateArgs:
-    c2dRelease: 10.6.8
     repo: mariadb-backup
 
