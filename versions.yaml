@@ -57,7 +57,7 @@ versions:
   - 10.11-debian11
   - 10-debian11
   - 10.11.2
-  - '10.12'
+  - '10.11'
   - '10'
   - latest
   templateArgs:
