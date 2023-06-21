@@ -17,8 +17,8 @@ RUN set -ex; \
 	rm -rf /var/lib/apt/lists/*
 
 # add gosu for easy step-down from root
-ENV GOSU_VERSION 1.12
-ENV GOSU_GPG B42F6819007F00F88E364FD4036A9C25BF357DD4
+ENV GOSU_VERSION 
+ENV GOSU_GPG 
 RUN set -ex; \
 	\
 	fetchDeps=' \
@@ -117,9 +117,9 @@ RUN set -ex; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
-ENV MARIADB_MAJOR 10.11
-ENV MARIADB_VERSION 1:10.11.2+maria~deb11
-ENV C2D_RELEASE 10.11.2
+ENV MARIADB_MAJOR 
+ENV MARIADB_VERSION 
+ENV C2D_RELEASE 10.12.0
 ENV MARIADB_BACKUP mariadb-backup
 
 RUN set -e;\
