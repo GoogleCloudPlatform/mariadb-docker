@@ -38,8 +38,8 @@ versions:
   - '11'
   - latest
   excludeTests:
-  - tests/functional_tests/create_db_test_10.yaml
-  - tests/functional_tests/remote_host_test_10.yaml
+  - tests/functional_tests/10_create_db_test.yaml
+  - tests/functional_tests/10_remote_host_test.yaml
   templateArgs:
     distroCodename: 'bullseye'
     distroMajor: '11'
@@ -65,8 +65,8 @@ versions:
   - '10'
   - latest
   excludeTests:
-  - tests/functional_tests/create_db_test_11.yaml
-  - tests/functional_tests/remote_host_test_11.yaml
+  - tests/functional_tests/11_create_db_test.yaml
+  - tests/functional_tests/11_remote_host_test.yaml
   templateArgs:
     distroCodename: 'bullseye'
     distroMajor: '11'
