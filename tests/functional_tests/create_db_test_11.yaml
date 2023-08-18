@@ -1,4 +1,4 @@
-# Copyright (C) 2018 Google Inc.
+# Copyright (C) 2023 Google Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@ teardown:
 target: some-mariadb-$UNIQUE-id
 tests:
 - name: Create a database
-  command: [mysql, -uroot, -pexample-password, -e, 'CREATE DATABASE exampledb']
+  command: [mariadb, -uroot, -pexample-password, -e, 'CREATE DATABASE exampledb']
 - name: Show databases
-  command: [mysql, -uroot, -pexample-password, -e, 'SHOW DATABASES']
+  command: [mariadb, -uroot, -pexample-password, -e, 'SHOW DATABASES']
   expect:
     stdout:
       matches: exampledb
