@@ -31,4 +31,4 @@ tests:
   command: [mysql, -h, some-mariadb-server-$UNIQUE-id, -uroot, -pexample-password, -e, 'SHOW DATABASES']
   expect:
     stdout:
-      matches: mysql
+      matches: information_schema
