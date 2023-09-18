@@ -68,6 +68,7 @@ RUN mkdir /docker-entrypoint-initdb.d
 ENV LANG C.UTF-8
 
 
+
 # bashbrew-architectures: amd64 arm64v8 ppc64le s390x
 ARG MARIADB_VERSION=1:11.0.3+maria~deb11
 ENV MARIADB_VERSION $MARIADB_VERSION
@@ -79,7 +80,7 @@ ENV MARIADB_VERSION $MARIADB_VERSION
 ARG REPOSITORY="http://archive.mariadb.org/mariadb-11.0.3/repo/debian/ bullseye main"
 
 RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup \
-			| bash -s -- --mariadb-server-version="mariadb-11.0" \
+			| bash -s -- --mariadb-server-version="mariadb-11.0" --os-type="debian" --os-version="bullseye" \
 			&& cat /etc/apt/sources.list.d/mariadb.list
 
 RUN set -e;\

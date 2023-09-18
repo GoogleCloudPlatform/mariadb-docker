@@ -91,5 +91,5 @@ versions:
   - latest
   templateArgs:
     c2dRelease: 10.11.5
-    distroCodename: bullseye
+    distroCodename: buster
     distroMajor: '10'
