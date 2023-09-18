@@ -67,7 +67,7 @@ versions:
     c2dRelease: 11.0.3
     distroCodename: bullseye
     distroMajor: '11'
-- dir: 10/debian11/10.12
+- dir: 10/debian11/10.11
   excludeTests:
   - tests/functional_tests/11_create_db_test.yaml
   - tests/functional_tests/11_remote_host_test.yaml
@@ -78,16 +78,18 @@ versions:
       version: '1.16'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
-      major: '10.12'
-      version: '10.12'
+      major: '10.11'
+      version: '10.11.5'
   repo: mariadb10
   tags:
-  - 10.12-debian11
+  - 10.11.5-debian11
+  - 10.11-debian11
   - 10-debian11
-  - '10.12'
+  - '10.11.5'
+  - '10.11'
   - '10'
   - latest
   templateArgs:
-    c2dRelease: 10.12.0
+    c2dRelease: 10.11.5
     distroCodename: bullseye
     distroMajor: '10'
