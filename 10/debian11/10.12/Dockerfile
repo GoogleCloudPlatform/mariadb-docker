@@ -1,6 +1,6 @@
 FROM marketplace.gcr.io/google/c2d-debian11
 
-ENV C2D_RELEASE 
+ENV C2D_RELEASE 10.12
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -8,9 +8,9 @@ RUN groupadd -r mysql && useradd -r -g mysql mysql
 # add gosu for easy step-down from root
 # https://github.com/tianon/gosu/releases
 # gosu key is B42F6819007F00F88E364FD4036A9C25BF357DD4
-ENV GOSU_VERSION 
+ENV GOSU_VERSION 1.16
 
-ARG GPG_KEYS=
+ARG GPG_KEYS=177F4010FE56CA3336300305F1656F24C74CD1D8
 # pub   rsa4096 2016-03-30 [SC]
 #         177F 4010 FE56 CA33 3630  0305 F165 6F24 C74C D1D8
 # uid           [ unknown] MariaDB Signing Key <signing-key@mariadb.org>
@@ -43,7 +43,7 @@ RUN set -eux; \
 	wget -q -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
 	GNUPGHOME="$(mktemp -d)"; \
 	export GNUPGHOME; \
-	gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys ; \
+	gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
 	for key in $GPG_KEYS; do \
 		gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
 	done; \
@@ -69,17 +69,17 @@ ENV LANG C.UTF-8
 
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le s390x
-ARG MARIADB_VERSION=1:+maria~deb10
+ARG MARIADB_VERSION=1:10.12+maria~deb10
 ENV MARIADB_VERSION $MARIADB_VERSION
 # release-status:Alpha
 # release-support-type:Unknown
 # (https://downloads.mariadb.org/rest-api/mariadb/)
 
 # Allowing overriding of REPOSITORY, a URL that includes suite and component for testing and Enterprise Versions
-ARG REPOSITORY="http://archive.mariadb.org/mariadb-/repo/debian/ bullseye main"
+ARG REPOSITORY="http://archive.mariadb.org/mariadb-10.12/repo/debian/ bullseye main"
 
 RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup \
-			| bash -s -- --mariadb-server-version="mariadb-" \
+			| bash -s -- --mariadb-server-version="mariadb-10.12" \
 			&& cat /etc/apt/sources.list.d/mariadb.list
 
 RUN set -e;\
