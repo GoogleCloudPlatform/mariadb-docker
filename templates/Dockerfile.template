@@ -72,6 +72,11 @@ RUN mkdir /docker-entrypoint-initdb.d
 # default locales in base image (https://github.com/docker-library/docs/blob/135b79cc8093ab02e55debb61fdb079ab2dbce87/ubuntu/README.md#locales)
 ENV LANG C.UTF-8
 
+{{ if eq $distroCodename "buster" }}
+# libreadline5 is a mariadb10/buster repository dependency
+RUN curl -o libreadline5.deb http://ftp.us.debian.org/debian/pool/main/r/readline5/libreadline5_5.2+dfsg-3+b13_amd64.deb \
+			&& dpkg -i libreadline5.deb
+{{- end }}
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le s390x
 ARG MARIADB_VERSION=1:{{ $mariadb.Version }}+maria~deb{{ $distroMajor }}
@@ -84,7 +89,7 @@ ENV MARIADB_VERSION $MARIADB_VERSION
 ARG REPOSITORY="http://archive.mariadb.org/mariadb-{{ $mariadb.Version }}/repo/debian/ {{ $distroCodename }} main"
 
 RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup \
-			| bash -s -- --mariadb-server-version="mariadb-{{ $mariadb.Major }}" \
+			| bash -s -- --mariadb-server-version="mariadb-{{ $mariadb.Major }}" --os-type="debian" --os-version="{{ $distroCodename }}" \
 			&& cat /etc/apt/sources.list.d/mariadb.list
 
 RUN set -e;\

@@ -18,7 +18,36 @@
 cloudbuild:
   enable_parallel: false
 versions:
+- dir: 11/debian11/11.1
+  excludeTests:
+  - tests/functional_tests/10_create_db_test.yaml
+  - tests/functional_tests/10_remote_host_test.yaml
+  from: marketplace.gcr.io/google/c2d-debian11
+  packages:
+    gosu:
+      gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
+      version: '1.16'
+    mariadb:
+      gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
+      major: '11.1'
+      version: 11.1.2
+  repo: mariadb11
+  tags:
+  - 11.1.2-debian11
+  - 11.1-debian11
+  - 11-debian11
+  - 11.1.2
+  - '11.1'
+  - '11'
+  - latest
+  templateArgs:
+    c2dRelease: 11.1.2
+    distroCodename: bullseye
+    distroMajor: '11'
 - dir: 11/debian11/11.0
+  excludeTests:
+  - tests/functional_tests/10_create_db_test.yaml
+  - tests/functional_tests/10_remote_host_test.yaml
   from: marketplace.gcr.io/google/c2d-debian11
   packages:
     gosu:
@@ -27,25 +56,21 @@ versions:
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '11.0'
-      version: '11.0.2'
+      version: 11.0.3
   repo: mariadb11
   tags:
-  - 11.0.2-debian11
+  - 11.0.3-debian11
   - 11.0-debian11
-  - 11-debian11
-  - 11.0.2
+  - 11.0.3
   - '11.0'
-  - '11'
-  - latest
-  excludeTests:
-  - tests/functional_tests/10_create_db_test.yaml
-  - tests/functional_tests/10_remote_host_test.yaml
   templateArgs:
-    distroCodename: 'bullseye'
+    c2dRelease: 11.0.3
+    distroCodename: bullseye
     distroMajor: '11'
-    c2dRelease: 11.0.2
-
 - dir: 10/debian11/10.11
+  excludeTests:
+  - tests/functional_tests/11_create_db_test.yaml
+  - tests/functional_tests/11_remote_host_test.yaml
   from: marketplace.gcr.io/google/c2d-debian11
   packages:
     gosu:
@@ -60,13 +85,11 @@ versions:
   - 10.11.5-debian11
   - 10.11-debian11
   - 10-debian11
-  - 10.11.5
+  - '10.11.5'
   - '10.11'
   - '10'
   - latest
-  excludeTests:
-  - tests/functional_tests/11_create_db_test.yaml
-  - tests/functional_tests/11_remote_host_test.yaml
   templateArgs:
-    distroCodename: 'bullseye'
-    distroMajor: '11'
+    c2dRelease: 10.11.5
+    distroCodename: buster
+    distroMajor: '10'
