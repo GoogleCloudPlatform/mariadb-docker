@@ -24,8 +24,9 @@ versions:
   - tests/functional_tests/10_remote_host_test.yaml
   from: marketplace.gcr.io/google/c2d-debian11
   packages:
+    golang:
+      version: '1.20'
     gosu:
-      gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
       version: '1.16'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
@@ -50,8 +51,9 @@ versions:
   - tests/functional_tests/10_remote_host_test.yaml
   from: marketplace.gcr.io/google/c2d-debian11
   packages:
+    golang:
+      version: '1.20'
     gosu:
-      gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
       version: '1.16'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
@@ -73,8 +75,9 @@ versions:
   - tests/functional_tests/11_remote_host_test.yaml
   from: marketplace.gcr.io/google/c2d-debian11
   packages:
+    golang:
+      version: '1.20'
     gosu:
-      gpg: B42F6819007F00F88E364FD4036A9C25BF357DD4
       version: '1.16'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
