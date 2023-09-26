@@ -1,3 +1,50 @@
+# Build gosu from the source. As by 2023-09-26 project only have releases
+# from go 1.18. https://github.com/tianon/gosu/releases
+FROM golang:1.20 as gosu-build
+
+RUN git clone https://github.com/tianon/gosu.git --branch 1.16 /go/src/github.com/tianon/gosu
+
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		arch-test \
+		file \
+		patch \
+	; \
+	rm -rf /var/lib/apt/lists/*
+
+# note: we cannot add "-s" here because then "govulncheck" does not work (see SECURITY.md); the ~0.2MiB increase (as of 2022-12-16, Go 1.18) is worth it
+ENV BUILD_FLAGS="-v -ldflags '-d -w'"
+
+RUN set -eux; \
+	{ \
+		echo '#!/usr/bin/env bash'; \
+		echo 'set -Eeuo pipefail -x'; \
+		echo 'eval "go build $BUILD_FLAGS -o /go/bin/gosu-$ARCH"'; \
+		echo 'file "/go/bin/gosu-$ARCH"'; \
+		echo 'if arch-test "$ARCH"; then'; \
+# there's a fun QEMU + Go 1.18+ bug that causes our binaries (especially on ARM arches) to hang indefinitely *sometimes*, hence the "timeout" and looping here
+		echo '  try() { for (( i = 0; i < 30; i++ )); do if timeout 1s "$@"; then return 0; fi; done; return 1; }'; \
+		echo '  try "/go/bin/gosu-$ARCH" --version'; \
+		echo '  try "/go/bin/gosu-$ARCH" nobody id'; \
+		echo '  try "/go/bin/gosu-$ARCH" nobody ls -l /proc/self/fd'; \
+		echo 'fi'; \
+	} > /usr/local/bin/gosu-build-and-test.sh; \
+	chmod +x /usr/local/bin/gosu-build-and-test.sh
+
+# disable CGO for ALL THE THINGS (to help ensure no libc)
+ENV CGO_ENABLED 0
+
+WORKDIR /go/src/github.com/tianon/gosu
+
+RUN set -eux; \
+	go mod download; \
+	go mod verify
+
+# gosu-$(dpkg --print-architecture)
+RUN ARCH=amd64    GOARCH=amd64       gosu-build-and-test.sh
+RUN set -eux; ls -lAFh /go/bin/gosu-*; file /go/bin/gosu-*
+
 FROM marketplace.gcr.io/google/c2d-debian11
 
 ENV C2D_RELEASE 11.0.3
@@ -5,10 +52,6 @@ ENV C2D_RELEASE 11.0.3
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
 
-# add gosu for easy step-down from root
-# https://github.com/tianon/gosu/releases
-# gosu key is B42F6819007F00F88E364FD4036A9C25BF357DD4
-ENV GOSU_VERSION 1.16
 
 ARG GPG_KEYS=177F4010FE56CA3336300305F1656F24C74CD1D8
 # pub   rsa4096 2016-03-30 [SC]
@@ -31,35 +74,11 @@ RUN set -eux; \
 		pwgen \
 		tzdata \
 		xz-utils \
-		zstd ; \
-	savedAptMark="$(apt-mark showmanual)"; \
-	apt-get install -y --no-install-recommends \
-		dirmngr \
-		gpg-agent \
-		wget; \
-	rm -rf /var/lib/apt/lists/*; \
-	dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
-	wget -q -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
-	wget -q -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
-	GNUPGHOME="$(mktemp -d)"; \
-	export GNUPGHOME; \
-	gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
-	for key in $GPG_KEYS; do \
-		gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
-	done; \
-	gpg --batch --export "$GPG_KEYS" > /etc/apt/trusted.gpg.d/mariadb.gpg; \
-	if command -v gpgconf >/dev/null; then \
-		gpgconf --kill all; \
-	fi; \
-	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
-	gpgconf --kill all; \
-	rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
-	apt-mark auto '.*' > /dev/null; \
-	[ -z "$savedAptMark" ] ||	apt-mark manual $savedAptMark >/dev/null; \
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	chmod +x /usr/local/bin/gosu; \
-	gosu --version; \
-	gosu nobody true
+		zstd
+
+# add gosu for easy step-down from root
+COPY --from=gosu-build /go/bin/gosu-amd64 /usr/local/bin/gosu
+RUN gosu --version && gosu nobody true
 
 RUN mkdir /docker-entrypoint-initdb.d
 
