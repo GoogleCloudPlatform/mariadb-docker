@@ -47,7 +47,7 @@ RUN set -eux; ls -lAFh /go/bin/gosu-*; file /go/bin/gosu-*
 
 FROM marketplace.gcr.io/google/c2d-debian11
 
-ENV C2D_RELEASE 11.1.2
+ENV C2D_RELEASE 11.4.1
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -89,17 +89,17 @@ ENV LANG C.UTF-8
 
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le s390x
-ARG MARIADB_VERSION=1:11.1.2+maria~deb11
+ARG MARIADB_VERSION=1:11.4.1+maria~deb11
 ENV MARIADB_VERSION $MARIADB_VERSION
 # release-status:Alpha
 # release-support-type:Unknown
 # (https://downloads.mariadb.org/rest-api/mariadb/)
 
 # Allowing overriding of REPOSITORY, a URL that includes suite and component for testing and Enterprise Versions
-ARG REPOSITORY="http://archive.mariadb.org/mariadb-11.1.2/repo/debian/ bullseye main"
+ARG REPOSITORY="http://archive.mariadb.org/mariadb-11.4.1/repo/debian/ bullseye main"
 
 RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup \
-			| bash -s -- --mariadb-server-version="mariadb-11.0" --os-type="debian" --os-version="bullseye" \
+			| bash -s -- --mariadb-server-version="mariadb-11.4" --os-type="debian" --os-version="bullseye" \
 			&& cat /etc/apt/sources.list.d/mariadb.list
 
 RUN set -e;\

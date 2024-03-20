@@ -1,8 +1,8 @@
 # Build gosu from the source. As by 2023-09-26 project only have releases
 # from go 1.18. https://github.com/tianon/gosu/releases
-FROM golang: as gosu-build
+FROM golang:1.20 as gosu-build
 
-RUN git clone https://github.com/tianon/gosu.git --branch 1.12 /go/src/github.com/tianon/gosu
+RUN git clone https://github.com/tianon/gosu.git --branch 1.17 /go/src/github.com/tianon/gosu
 
 RUN set -eux; \
 	apt-get update; \
@@ -47,7 +47,7 @@ RUN set -eux; ls -lAFh /go/bin/gosu-*; file /go/bin/gosu-*
 
 FROM marketplace.gcr.io/google/c2d-debian11
 
-ENV C2D_RELEASE 10.12
+ENV C2D_RELEASE 10.11.5
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -87,19 +87,22 @@ RUN mkdir /docker-entrypoint-initdb.d
 ENV LANG C.UTF-8
 
 
+# libreadline5 is a mariadb10/buster repository dependency
+RUN curl -o libreadline5.deb http://ftp.us.debian.org/debian/pool/main/r/readline5/libreadline5_5.2+dfsg-3+b13_amd64.deb \
+			&& dpkg -i libreadline5.deb
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le s390x
-ARG MARIADB_VERSION=1:10.12+maria~deb
+ARG MARIADB_VERSION=1:10.11.5+maria~deb10
 ENV MARIADB_VERSION $MARIADB_VERSION
 # release-status:Alpha
 # release-support-type:Unknown
 # (https://downloads.mariadb.org/rest-api/mariadb/)
 
 # Allowing overriding of REPOSITORY, a URL that includes suite and component for testing and Enterprise Versions
-ARG REPOSITORY="http://archive.mariadb.org/mariadb-10.12/repo/debian/  main"
+ARG REPOSITORY="http://archive.mariadb.org/mariadb-10.11.5/repo/debian/ buster main"
 
 RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup \
-			| bash -s -- --mariadb-server-version="mariadb-10.12" --os-type="debian" --os-version="" \
+			| bash -s -- --mariadb-server-version="mariadb-10.11" --os-type="debian" --os-version="buster" \
 			&& cat /etc/apt/sources.list.d/mariadb.list
 
 RUN set -e;\
