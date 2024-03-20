@@ -2,7 +2,7 @@
 # from go 1.18. https://github.com/tianon/gosu/releases
 FROM golang:1.20 as gosu-build
 
-RUN git clone https://github.com/tianon/gosu.git --branch 1.16 /go/src/github.com/tianon/gosu
+RUN git clone https://github.com/tianon/gosu.git --branch 1.17 /go/src/github.com/tianon/gosu
 
 RUN set -eux; \
 	apt-get update; \
