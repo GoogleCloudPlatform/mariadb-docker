@@ -99,7 +99,7 @@ ENV MARIADB_VERSION $MARIADB_VERSION
 ARG REPOSITORY="http://archive.mariadb.org/mariadb-11.1.2/repo/debian/ bullseye main"
 
 RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup \
-			| bash -s -- --mariadb-server-version="mariadb-11.0" --os-type="debian" --os-version="bullseye" \
+			| bash -s -- --mariadb-server-version="mariadb-11.1" --os-type="debian" --os-version="bullseye" \
 			&& cat /etc/apt/sources.list.d/mariadb.list
 
 RUN set -e;\

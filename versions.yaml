@@ -42,7 +42,7 @@ versions:
   - '11'
   - latest
   templateArgs:
-    c2dRelease: 11.1.2
+    c2dRelease: 11.4.1
     distroCodename: bullseye
     distroMajor: '11'
 - dir: 11/debian11/11.1
@@ -57,7 +57,7 @@ versions:
       version: '1.17'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
-      major: '11.0'
+      major: '11.1'
       version: 11.1.2
   repo: mariadb11
   tags:
