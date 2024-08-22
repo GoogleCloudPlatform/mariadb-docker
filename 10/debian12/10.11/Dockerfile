@@ -2,7 +2,7 @@
 # from go 1.18. https://github.com/tianon/gosu/releases
 FROM golang:1.20 as gosu-build
 
-RUN git clone https://github.com/tianon/gosu.git --branch 1.16 /go/src/github.com/tianon/gosu
+RUN git clone https://github.com/tianon/gosu.git --branch 1.17 /go/src/github.com/tianon/gosu
 
 RUN set -eux; \
 	apt-get update; \
@@ -45,9 +45,9 @@ RUN set -eux; \
 RUN ARCH=amd64    GOARCH=amd64       gosu-build-and-test.sh
 RUN set -eux; ls -lAFh /go/bin/gosu-*; file /go/bin/gosu-*
 
-FROM marketplace.gcr.io/google/c2d-debian11
+FROM marketplace.gcr.io/google/debian12
 
-ENV C2D_RELEASE 10.11.5
+ENV C2D_RELEASE 10.11.9
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -74,7 +74,26 @@ RUN set -eux; \
 		pwgen \
 		tzdata \
 		xz-utils \
-		zstd
+		zstd ; \
+	savedAptMark="$(apt-mark showmanual)"; \
+	apt-get install -y --no-install-recommends \
+		dirmngr \
+		gpg-agent \
+		wget; \
+	rm -rf /var/lib/apt/lists/*; \
+	GNUPGHOME="$(mktemp -d)"; \
+	export GNUPGHOME; \
+	gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+	for key in $GPG_KEYS; do \
+		gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
+	done; \
+	gpg --batch --export "$GPG_KEYS" > /etc/apt/trusted.gpg.d/mariadb.gpg; \
+	if command -v gpgconf >/dev/null; then \
+		gpgconf --kill all; \
+	fi; \
+	apt-mark auto '.*' > /dev/null; \
+	[ -z "$savedAptMark" ] ||	apt-mark manual $savedAptMark >/dev/null; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
 # add gosu for easy step-down from root
 COPY --from=gosu-build /go/bin/gosu-amd64 /usr/local/bin/gosu
@@ -87,30 +106,25 @@ RUN mkdir /docker-entrypoint-initdb.d
 ENV LANG C.UTF-8
 
 
-# libreadline5 is a mariadb10/buster repository dependency
-RUN curl -o libreadline5.deb http://ftp.us.debian.org/debian/pool/main/r/readline5/libreadline5_5.2+dfsg-3+b13_amd64.deb \
-			&& dpkg -i libreadline5.deb
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le s390x
-ARG MARIADB_VERSION=1:10.11.5+maria~deb10
+ARG MARIADB_VERSION=1:10.11.9+maria~deb12
 ENV MARIADB_VERSION $MARIADB_VERSION
 # release-status:Alpha
 # release-support-type:Unknown
 # (https://downloads.mariadb.org/rest-api/mariadb/)
 
 # Allowing overriding of REPOSITORY, a URL that includes suite and component for testing and Enterprise Versions
-ARG REPOSITORY="http://archive.mariadb.org/mariadb-10.11.5/repo/debian/ buster main"
-
-RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup \
-			| bash -s -- --mariadb-server-version="mariadb-10.11" --os-type="debian" --os-version="buster" \
-			&& cat /etc/apt/sources.list.d/mariadb.list
+ARG REPOSITORY="http://archive.mariadb.org/mariadb-10.11.9/repo/debian/ bookworm main"
 
 RUN set -e;\
+	echo "deb ${REPOSITORY}" > /etc/apt/sources.list.d/mariadb.list; \
 	{ \
 		echo 'Package: *'; \
 		echo 'Pin: release o=MariaDB'; \
 		echo 'Pin-Priority: 999'; \
 	} > /etc/apt/preferences.d/mariadb
+
 # add repository pinning to make sure dependencies from this MariaDB repo are preferred over Debian dependencies
 #  libmariadbclient18 : Depends: libmysqlclient18 (= 5.5.42+maria-1~wheezy) but 5.5.43-0+deb7u1 is to be installed
 

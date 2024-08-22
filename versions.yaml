@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,81 +18,83 @@
 cloudbuild:
   enable_parallel: false
 versions:
-- dir: 11/debian11/11.1
+- dir: 11/debian12/11.5
   excludeTests:
   - tests/functional_tests/10_create_db_test.yaml
   - tests/functional_tests/10_remote_host_test.yaml
-  from: marketplace.gcr.io/google/c2d-debian11
+  from: marketplace.gcr.io/google/debian12
   packages:
     golang:
       version: '1.20'
     gosu:
-      version: '1.16'
+      version: '1.17'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
-      major: '11.1'
-      version: 11.1.2
+      major: '11.5'
+      version: 11.5.2
   repo: mariadb11
   tags:
-  - 11.1.2-debian11
-  - 11.1-debian11
-  - 11-debian11
-  - 11.1.2
-  - '11.1'
+  - 11.5.2-debian12
+  - 11.5-debian12
+  - 11-debian12
+  - 11.5.2
+  - '11.5'
   - '11'
   - latest
   templateArgs:
-    c2dRelease: 11.1.2
-    distroCodename: bullseye
-    distroMajor: '11'
-- dir: 11/debian11/11.0
+    c2dRelease: 11.5.2
+    distroCodename: bookworm
+    distroMajor: '12'
+
+- dir: 11/debian12/11.1
   excludeTests:
   - tests/functional_tests/10_create_db_test.yaml
   - tests/functional_tests/10_remote_host_test.yaml
-  from: marketplace.gcr.io/google/c2d-debian11
+  from: marketplace.gcr.io/google/debian12
   packages:
     golang:
       version: '1.20'
     gosu:
-      version: '1.16'
+      version: '1.17'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
-      major: '11.0'
-      version: 11.0.3
+      major: '11.1'
+      version: 11.1.6
   repo: mariadb11
   tags:
-  - 11.0.3-debian11
-  - 11.0-debian11
-  - 11.0.3
-  - '11.0'
+  - 11.1.6-debian12
+  - 11.1-debian12
+  - 11.1.6
+  - '11.1'
   templateArgs:
-    c2dRelease: 11.0.3
-    distroCodename: bullseye
-    distroMajor: '11'
-- dir: 10/debian11/10.11
+    c2dRelease: 11.1.6
+    distroCodename: bookworm
+    distroMajor: '12'
+
+- dir: 10/debian12/10.11
   excludeTests:
   - tests/functional_tests/11_create_db_test.yaml
   - tests/functional_tests/11_remote_host_test.yaml
-  from: marketplace.gcr.io/google/c2d-debian11
+  from: marketplace.gcr.io/google/debian12
   packages:
     golang:
       version: '1.20'
     gosu:
-      version: '1.16'
+      version: '1.17'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
       major: '10.11'
-      version: '10.11.5'
+      version: '10.11.9'
   repo: mariadb10
   tags:
-  - 10.11.5-debian11
-  - 10.11-debian11
-  - 10-debian11
-  - '10.11.5'
+  - 10.11.9-debian12
+  - 10.11-debian12
+  - 10-debian12
+  - '10.11.9'
   - '10.11'
   - '10'
   - latest
   templateArgs:
-    c2dRelease: 10.11.5
-    distroCodename: buster
-    distroMajor: '10'
+    c2dRelease: 10.11.9
+    distroCodename: bookworm
+    distroMajor: '12'
