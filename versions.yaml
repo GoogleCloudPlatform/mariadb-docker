@@ -33,6 +33,9 @@ versions:
       major: '11.5'
       version: 11.5.2
   repo: mariadb11
+  annotations:
+  - key: com.googleapis.cloudmarketplace.product.service.name
+    value: services/2a63a3a0-26e6-41c3-8e5a-7e9c6ac0964b.cloudpartnerservices.goog
   tags:
   - 11.5.2-debian12
   - 11.5-debian12
@@ -58,6 +61,9 @@ versions:
       version: '1.17'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
+  annotations:
+  - key: com.googleapis.cloudmarketplace.product.service.name
+    value: services/2a63a3a0-26e6-41c3-8e5a-7e9c6ac0964b.cloudpartnerservices.goog
       major: '11.1'
       version: 11.1.6
   repo: mariadb11
@@ -86,6 +92,9 @@ versions:
       major: '10.11'
       version: '10.11.9'
   repo: mariadb10
+  annotations:
+  - key: com.googleapis.cloudmarketplace.product.service.name
+    value: services/1082de93-67cf-464e-8cec-c5137645640a.cloudpartnerservices.goog
   tags:
   - 10.11.9-debian12
   - 10.11-debian12
