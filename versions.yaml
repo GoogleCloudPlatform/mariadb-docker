@@ -63,11 +63,11 @@ versions:
       version: '1.17'
     mariadb:
       gpg: 177F4010FE56CA3336300305F1656F24C74CD1D8
+      major: '11.1'
+      version: 11.1.6
   annotations:
   - key: com.googleapis.cloudmarketplace.product.service.name
     value: services/2a63a3a0-26e6-41c3-8e5a-7e9c6ac0964b.cloudpartnerservices.goog
-      major: '11.1'
-      version: 11.1.6
   repo: mariadb11
   tags:
   - 11.1.6-debian12
